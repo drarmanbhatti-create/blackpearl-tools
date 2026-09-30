@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Development &amp; Off-Plan — BLACK PEARL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>:root{
+  /* BLACK PEARL tokens (Master Specification v3, §2.3) */
+  --paper:#F3F0EA; --panel:#FCFBF8; --ink:#161616; --muted:#8E8B86; --rule:#DCD8D0;
+  /* Status colours: muted editorial tones, no gold, no signal green */
+  --teal:#2E4A43; --teal-soft:#E8EDEA; --amber:#6B5426; --amber-soft:#F2EDE2; --red:#6E2F2F; --red-soft:#F1E6E4;
+  --focus:#161616;
+  --serif:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:32px 20px 48px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.12;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:400;font-size:23px;margin:0 0 4px}
+h3{font-size:14px;font-weight:600;margin:0 0 10px;color:var(--ink)}
+p.lead{max-width:68ch;color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:28px;align-items:start}
+.grid>*{min-width:0}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.inputs{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:6px 18px 16px;position:sticky;top:12px}
+@media (max-width:900px){.inputs{position:static}}
+details{border-bottom:1px solid var(--rule);padding:10px 0}
+details:last-of-type{border-bottom:0}
+summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+summary::-webkit-details-marker{display:none}
+.field{margin:10px 0 4px}
+.field label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:4px;gap:8px}
+.field label output{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.field input[type=range]{width:100%;accent-color:var(--teal)}
+.field input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--rule);border-radius:4px;font:inherit;font-variant-numeric:tabular-nums;background:#fff;color:var(--ink)}
+.hint{font-size:12px;color:var(--muted);margin-top:2px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.toolbar{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+button.reset{border:1px solid var(--rule);background:#fff;border-radius:4px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:18px 20px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border-top:1px solid var(--rule)}
+.kpi{padding:12px 14px 12px 0;border-bottom:1px solid var(--rule)}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.kpi .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.verdict{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:4px;font-size:13.5px;margin-top:12px}
+.verdict.ok{background:var(--teal-soft);color:#0B4F4D}
+.verdict.warn{background:var(--amber-soft);color:#7A3A06}
+.verdict.bad{background:var(--red-soft);color:#7C1C21}
+.verdict b{white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+th,td{padding:7px 9px;text-align:right;font-size:13px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:600;color:var(--muted)}
+td:first-child,th:first-child{text-align:left}
+tr.sum td{font-weight:600;border-top:1px solid var(--ink)}
+.neg{color:var(--red)}
+.foot{font-size:12.5px;color:var(--muted);max-width:90ch}
+.foot p{margin:0 0 8px}
+.cta{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:#0B0B0B;color:#F4F1EB;border-radius:2px;padding:22px 24px;margin:22px 0}
+.cta p{margin:0;max-width:62ch;color:#C9C5BD;font-size:14px}
+.cta-links{display:flex;gap:10px;flex-wrap:wrap}
+.cta-button{background:#F4F1EB;color:#161616;border:0;font:inherit;font-weight:600;padding:10px 16px;border-radius:2px;font-size:14px;white-space:nowrap;cursor:pointer}
+.cta-button:hover{background:#fff}
+@media (prefers-reduced-motion:no-preference){.bar{transition:height .25s ease,y .25s ease}}
+</style></head><body><div class="wrap">
+  <h1>Development and Off-Plan: Does the Construction Risk Pay Off?</h1>
+  <p class="lead">A project only carries its completion risk if the return on its own development cost lies clearly above the return the market will later grant a buyer. The model builds up cost year by year, capitalises construction interest, maps the lease-up phase and splits the surplus between investors and sponsor.</p>
+
+  <div class="grid">
+    <form class="inputs" id="f" onsubmit="return false" aria-label="Assumptions">
+      <details open><summary>Project and construction cost</summary>
+        <div class="field"><label for="gla">Lettable area <output id="o_gla"></output></label><input type="range" id="gla" min="50000" max="1000000" step="10000"></div>
+        <div class="field"><label for="land">Land cost (AED) <output id="o_land"></output></label><input type="range" id="land" min="5000000" max="300000000" step="1000000"></div>
+        <div class="field"><label for="hc">Hard construction cost (AED/sqft) <output id="o_hc"></output></label><input type="range" id="hc" min="400" max="1500" step="10"></div>
+        <div class="field"><label for="soft">Soft costs (% of construction cost) <output id="o_soft"></output></label><input type="range" id="soft" min="0.05" max="0.25" step="0.005"></div>
+        <div class="field"><label for="s1">Construction schedule, year 1 <output id="o_s1"></output></label><input type="range" id="s1" min="0.05" max="0.6" step="0.05"></div>
+        <div class="field"><label for="s2">Construction schedule, year 2 <output id="o_s2"></output></label><input type="range" id="s2" min="0.05" max="0.7" step="0.05"></div>
+        <div class="hint" id="s3hint"></div>
+      </details>
+      <details open><summary>Letting</summary>
+        <div class="field"><label for="rent">Market rent (AED/sqft p.a.) <output id="o_rent"></output></label><input type="range" id="rent" min="60" max="250" step="1"></div>
+        <div class="field"><label for="g">Rent growth p.a. <output id="o_g"></output></label><input type="range" id="g" min="-0.02" max="0.06" step="0.0025"></div>
+        <div class="field"><label for="opex">Operating costs (% of rent) <output id="o_opex"></output></label><input type="range" id="opex" min="0.15" max="0.45" step="0.01"></div>
+        <div class="field"><label for="o1">Occupancy, 1st year after completion <output id="o_o1"></output></label><input type="range" id="o1" min="0.1" max="1" step="0.05"></div>
+        <div class="field"><label for="o2">Occupancy, 2nd year <output id="o_o2"></output></label><input type="range" id="o2" min="0.2" max="1" step="0.05"></div>
+        <div class="field"><label for="o3">Stabilised occupancy <output id="o_o3"></output></label><input type="range" id="o3" min="0.5" max="1" step="0.01"></div>
+      </details>
+      <details><summary>Construction financing</summary>
+        <div class="field"><label for="ltc">Loan to Cost <output id="o_ltc"></output></label><input type="range" id="ltc" min="0" max="0.75" step="0.05"></div>
+        <div class="field"><label for="r">Construction interest p.a. <output id="o_r"></output></label><input type="range" id="r" min="0.03" max="0.1" step="0.0025"></div>
+      </details>
+      <details><summary>Exit and profit split</summary>
+        <div class="field"><label for="cap">Exit cap rate <output id="o_cap"></output></label><input type="range" id="cap" min="0.045" max="0.1" step="0.0025"></div>
+        <div class="field"><label for="sell">Verkaufsnebenkosten <output id="o_sell"></output></label><input type="range" id="sell" min="0" max="0.04" step="0.0025"></div>
+        <div class="field"><label for="H">Holding period from land purchase (years) <output id="o_H"></output></label><input type="range" id="H" min="6" max="11" step="1"></div>
+        <div class="field"><label for="wacc">Discount rate (WACC) <output id="o_wacc"></output></label><input type="range" id="wacc" min="0.04" max="0.14" step="0.0025"></div>
+        <div class="field"><label for="pref">Investor preferred return <output id="o_pref"></output></label><input type="range" id="pref" min="0" max="0.14" step="0.005"></div>
+        <div class="field"><label for="prom">Sponsor promote above the hurdle <output id="o_prom"></output></label><input type="range" id="prom" min="0" max="0.4" step="0.05"></div>
+      </details>
+    </form>
+
+    <main>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="AED" aria-pressed="true">AED</button><button type="button" data-cur="EUR" aria-pressed="false">EUR</button></div>
+        <button type="button" class="reset" id="reset">Reset to model values</button>
+      </div>
+
+      <section class="card" aria-labelledby="h-spread">
+        <h2 id="h-spread">Development Spread</h2>
+        <p class="foot" style="margin:0 0 10px">Return on development cost against the return at which the market buys the completed asset. The difference is the actual developer margin.</p>
+        <svg id="spread" viewBox="0 0 700 120" width="100%" role="img" aria-label="Yield on cost versus exit cap rate"></svg>
+        <div id="v_spread"></div>
+      </section>
+
+      <section class="card">
+        <h3>Cost and capital</h3>
+        <div class="kpis" id="k1"></div>
+        <h3 style="margin-top:18px">Project quality</h3>
+        <div class="kpis" id="k2"></div>
+        <div id="v_poc"></div>
+        <h3 style="margin-top:18px">Return and profit split</h3>
+        <div class="kpis" id="k3"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-cf">
+        <h2 id="h-cf">Investor equity cash flows</h2>
+        <p class="foot" style="margin:0 0 10px">Contributions during construction, ongoing surpluses after interest, exit less loan repayment and sponsor promote.</p>
+        <svg id="cf" viewBox="0 0 700 240" width="100%" role="img" aria-label="Annual equity cash flows"></svg>
+        <details style="border:0;padding:6px 0 0"><summary>Show annual breakdown</summary>
+          <div class="scroll" style="margin-top:10px"><table id="tbl"></table></div>
+        </details>
+      </section>
+
+      <!-- TODO (Master Specification v3, §10): booking provider not yet selected.
+           This button does NOT trigger a booking. It reports the intent via postMessage to the
+           embedding window; the unified booking flow is wired up there in Framer.
+           Message: { type:'bp-tool-cta', tool:'development-off-plan', action:'book-consultation' } -->
+      <div class="cta">
+        <p>The model calculates before tax and at project level. How you participate — directly, through a UAE company or a German holding — determines what reaches you after German taxation.</p>
+        <div class="cta-links">
+          <button type="button" class="cta-button" id="bp-cta">Book a Consultation</button>
+        </div>
+      </div>
+
+      <div class="foot">
+        <p><b>Methodology.</b> Land in year 0, construction over three years following the cost curve set above. The construction loan is drawn pro rata on each cost instalment; construction interest is capitalised on a mid-year convention and increases the loan balance. After completion a bullet structure applies: interest paid currently, principal repaid at exit. Exit proceeds = the following year's net rent divided by the exit cap rate. Yield on cost = stabilised net rent (third year after completion) divided by total development cost including construction interest.</p>
+        <p><b>Profit split.</b> Simplified European waterfall: each investor cash flow is compounded forward to exit at the preferred return. Only a positive surplus above that is shared with the sponsor in the ratio set above, payable at exit.</p>
+        <p><b>Reference values.</b> A development spread below 150 basis points and a profit on cost below 15 % are regarded institutionally as not commensurate with the risk. All figures are a non-binding model calculation and do not replace advice in an individual case. Conversion at 4.2769 AED per EUR.</p>
+      </div>
+    </main>
+  </div>
+</div>
+<script>const D={gla:250000,land:60000000,hc:750,soft:0.12,s1:0.2,s2:0.45,rent:130,g:0.025,opex:0.28,o1:0.5,o2:0.8,o3:0.92,ltc:0.55,r:0.055,cap:0.07,sell:0.015,H:10,wacc:0.07,pref:0.08,prom:0.2};
+const FX=4.2769; let cur='AED';
+const $=id=>document.getElementById(id);
+const nf0=new Intl.NumberFormat('de-DE',{maximumFractionDigits:0});
+const nf1=new Intl.NumberFormat('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1});
+const pct=(x,d=1)=>isFinite(x)?new Intl.NumberFormat('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}).format(x*100)+' %':'–';
+const money=(x)=>{const v=cur==='EUR'?x/FX:x;const a=Math.abs(v);let s;if(a>=1e9)s=nf1.format(v/1e9)+' bn';else if(a>=1e6)s=nf1.format(v/1e6)+' m';else if(a>=1e3)s=nf0.format(v/1e3)+' k';else s=nf0.format(v);return s+' '+cur};
+const fmt={gla:v=>nf0.format(v)+' sqft',land:v=>nf0.format(v/1e6)+' m',hc:v=>nf0.format(v),soft:pct,s1:v=>pct(v,0),s2:v=>pct(v,0),rent:v=>nf0.format(v),g:v=>pct(v,2),opex:v=>pct(v,0),o1:v=>pct(v,0),o2:v=>pct(v,0),o3:v=>pct(v,0),ltc:v=>pct(v,0),r:v=>pct(v,2),cap:v=>pct(v,2),sell:v=>pct(v,2),H:v=>v+' yrs',wacc:v=>pct(v,2),pref:v=>pct(v,1),prom:v=>pct(v,0)};
+function irr(c){const f=r=>c.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);let lo=-0.99,hi=2;if(f(lo)*f(hi)>0)return NaN;for(let k=0;k<200;k++){const m=(lo+hi)/2;if(f(lo)*f(m)<=0)hi=m;else lo=m}return(lo+hi)/2}
+function read(){const p={};for(const k in D)p[k]=parseFloat($(k).value);return p}
+function model(p){
+  const bz=3,N=p.H+2,s3=Math.max(0,1-p.s1-p.s2),S=[0,p.s1,p.s2,s3];
+  const capex=[],draw=[],ci=[],bal=[],ek=[],tdc=[],noi=[],occ=[];
+  for(let t=0;t<N;t++){
+    const hard=-(p.gla*p.hc)*(t>=1&&t<=3?S[t]:0);
+    capex[t]=(t===0?-p.land:0)+hard*(1+p.soft);
+    draw[t]=t<=bz?-capex[t]*p.ltc:0;
+    if(t===0){ci[t]=0;bal[t]=draw[0]}else{ci[t]=t<=bz?(bal[t-1]+0.5*draw[t])*p.r:0;bal[t]=t>p.H?0:bal[t-1]+draw[t]+ci[t]}
+    ek[t]=capex[t]+draw[t];
+    tdc[t]=(t===0?0:tdc[t-1])-capex[t]+ci[t];
+    occ[t]=t<=bz?0:(t===bz+1?p.o1:t===bz+2?p.o2:p.o3);
+    const gpr=t>bz?p.gla*p.rent*Math.pow(1+p.g,t):0;
+    noi[t]=gpr*occ[t]*(1-p.opex);
+  }
+  const rows=[];const unl=[],eq=[];let exc=0;
+  for(let t=0;t<=p.H;t++){
+    const cint=t>bz?-bal[t-1]*p.r:0;
+    const sale=t===p.H?noi[t+1]/p.cap:0, sc=-sale*p.sell, rep=t===p.H?-bal[t]:0;
+    unl[t]=capex[t]+noi[t]+sale+sc;
+    eq[t]=ek[t]+noi[t]+cint+sale+sc+rep;
+    exc+=eq[t]*Math.pow(1+p.pref,p.H-t);
+    rows.push({t,capex:capex[t],draw:draw[t],ci:ci[t],bal:bal[t],ek:ek[t],occ:occ[t],noi:noi[t],cint,sale,sc,rep,eq:eq[t]});
+  }
+  const TDC=tdc[p.H],EK=-ek.slice(0,p.H+1).reduce((a,b)=>a+b,0),stab=noi[bz+3];
+  const YoC=stab/TDC,MV=stab/p.cap,prof=MV-TDC;
+  const promote=Math.max(0,exc)*p.prom;
+  const lp=eq.map((x,t)=>x-(t===p.H?promote:0));
+  const npv=unl.reduce((s,x,t)=>s+x/Math.pow(1+p.wacc,t),0);
+  return{rows,TDC,EK,ltcEff:1-EK/TDC,stab,YoC,spread:YoC-p.cap,MV,prof,poc:prof/TDC,pIRR:irr(unl),npv,eIRR:irr(eq),promote,lpMult:(eq.slice(1).reduce((a,b)=>a+b,0)-promote)/EK,lpIRR:irr(lp),lp,s3};
+}
+const kpi=(k,v,s='')=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
+function verdict(cls,head,txt){return`<div class="verdict ${cls}"><b>${head}</b><span>${txt}</span></div>`}
+function drawSpread(p,m){
+  const svg=$('spread');const W=700,x0=10,x1=672,max=Math.max(0.12,m.YoC*1.15,p.cap*1.3);const X=v=>x0+(x1-x0)*Math.max(0,v)/max;
+  const col=m.spread>=0.015?'var(--teal)':m.spread>=0?'var(--amber)':'var(--red)';
+  let g='';
+  for(let v=0;v<=max+1e-9;v+=0.02){g+=`<line x1="${X(v)}" y1="18" x2="${X(v)}" y2="96" stroke="var(--rule)"/><text x="${X(v)}" y="114" font-size="11" text-anchor="middle" fill="var(--muted)">${nf0.format(v*100)} %</text>`}
+  g+=`<rect x="${X(p.cap)}" y="22" width="${Math.max(0,X(p.cap+0.015)-X(p.cap))}" height="70" fill="var(--amber-soft)"/>`;
+  g+=`<rect class="bar" x="${x0}" y="30" width="${X(p.cap)-x0}" height="18" fill="#9AA6B5"/><text x="${x0+6}" y="43" font-size="12" fill="#fff">Exit cap ${pct(p.cap,2)}</text>`;
+  g+=`<rect class="bar" x="${x0}" y="58" width="${X(m.YoC)-x0}" height="18" fill="${col}"/><text x="${x0+6}" y="71" font-size="12" fill="#fff">Yield on Cost ${pct(m.YoC,2)}</text>`;
+  g+=`<text x="${Math.min(X(p.cap+0.015)+4,W-150)}" y="16" font-size="11" fill="var(--amber)">Minimum spread 150 bp</text>`;
+  svg.innerHTML=g;
+  const bp=nf0.format(m.spread*1e4);
+  $('v_spread').innerHTML=m.spread>=0.015?verdict('ok',bp+' bp','The margin carries the construction and letting risk by institutional standards.'):m.spread>=0?verdict('warn',bp+' bp','Positive, but below 150 bp: little buffer for cost overruns, delays or a weaker exit yield.'):verdict('bad',bp+' bp','The completed asset is worth less than it costs. The project destroys value before financing even takes effect.');
+}
+function drawCF(m){
+  const svg=$('cf');const W=700,H=240,pad=92,top=14,bot=26;const n=m.lp.length;
+  const vals=m.lp;const mx=Math.max(...vals,0),mn=Math.min(...vals,0);const rng=(mx-mn)||1;
+  const Y=v=>top+(H-top-bot)*(mx-v)/rng;const bw=(W-pad-10)/n*0.62;
+  let g=`<line x1="${pad}" x2="${W-6}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink)"/>`;
+  vals.forEach((v,i)=>{const cx=pad+(W-pad-10)/n*(i+0.5);const y=Math.min(Y(v),Y(0)),h=Math.abs(Y(v)-Y(0));
+    g+=`<rect class="bar" x="${cx-bw/2}" y="${y}" width="${bw}" height="${Math.max(h,1)}" fill="${v<0?'var(--red)':'var(--teal)'}"><title>Year ${i}: ${money(v)}</title></rect>`;
+    g+=`<text x="${cx}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--muted)">${i}</text>`});
+  g+=`<text x="${pad-6}" y="${Y(mx)+4}" font-size="10.5" text-anchor="end" fill="var(--muted)">${money(mx)}</text><text x="${pad-6}" y="${Y(mn)+4}" font-size="10.5" text-anchor="end" fill="var(--muted)">${money(mn)}</text>`;
+  svg.innerHTML=g;
+}
+function table(m){
+  const f=v=>{const x=cur==='EUR'?v/FX:v;return`<span class="${x<-0.5?'neg':''}">${nf0.format(Math.round(x/1000))}</span>`};
+  const R=m.rows;const hd='<tr><th>k '+cur+'</th>'+R.map(r=>`<th>${r.t}</th>`).join('')+'</tr>';
+  const line=(lab,key,cls='')=>`<tr class="${cls}"><td>${lab}</td>`+R.map(r=>`<td>${f(r[key])}</td>`).join('')+'</tr>';
+  $('tbl').innerHTML=hd+line('Investment cost','capex')+line('Loan drawdown','draw')+line('Capitalised construction interest','ci')+line('Loan balance','bal')+
+  `<tr><td>Occupancy</td>${R.map(r=>`<td>${r.occ?nf0.format(r.occ*100)+' %':'–'}</td>`).join('')}</tr>`+
+  line('Net rent (NOI)','noi')+line('Interest after completion','cint')+line('Sale proceeds','sale')+line('Selling costs','sc')+line('Loan repayment','rep')+line('Equity cash flow','eq','sum');
+}
+function render(){
+  const p=read();for(const k in D)$('o_'+k).textContent=fmt[k](p[k]);
+  const m=model(p);
+  $('s3hint').textContent=p.s1+p.s2>1?'Years 1 and 2 together exceed 100 %: please reduce.':'Construction schedule, year 3 is the remainder: '+pct(m.s3,0);
+  $('k1').innerHTML=kpi('Total development cost',money(m.TDC),'incl. construction interest')+kpi('Equity',money(m.EK))+kpi('Effective leverage',pct(m.ltcEff),'share of total development cost');
+  $('k2').innerHTML=kpi('Stabilised net rent',money(m.stab),'third year after completion')+kpi('Yield on Cost',pct(m.YoC,2))+kpi('Stabilised market value',money(m.MV))+kpi('Developer profit',money(m.prof))+kpi('Profit on Cost',pct(m.poc));
+  $('v_poc').innerHTML=m.poc>=0.15?verdict('ok','Profit on Cost '+pct(m.poc),'at or above the industry band of 15 to 25 %.'):verdict(m.poc>=0?'warn':'bad','Profit on Cost '+pct(m.poc),'below 15 %: the margin is not commensurate with the completion risk.');
+  $('k3').innerHTML=kpi('Project IRR, unlevered',pct(m.pIRR))+kpi('Net present value at WACC',money(m.npv))+kpi('Equity IRR before promote',pct(m.eIRR))+kpi('Sponsor promote',money(m.promote),'payable at exit')+kpi('Investors: multiple',nf1.format(m.lpMult)+'x','after promote')+kpi('Investors: IRR',pct(m.lpIRR),'after promote');
+  drawSpread(p,m);drawCF(m);table(m);post();
+}
+function setDefaults(){for(const k in D)$(k).value=D[k]}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{cur=b.dataset.cur;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+$('reset').addEventListener('click',()=>{setDefaults();render()});
+$('f').addEventListener('input',render);
+function post(){try{parent.postMessage({type:'bc-embed-height',id:'development',height:document.documentElement.scrollHeight},'*')}catch(e){}}
+window.addEventListener('resize',post);
+setDefaults();render();
+</script>
+<script>
+/* BLACK PEARL integration layer.
+   Deliberately separated from the calculation engine above: this block contains no
+   calculation, no tax logic and no formula. It only bridges to the embedding Framer
+   window (height + CTA intent). Removable without breaking the module. */
+(function(){
+  var TOOL='development-off-plan';
+  function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
+  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+  var cta=document.getElementById('bp-cta');
+  if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
+  window.addEventListener('load',height);
+  window.addEventListener('resize',height);
+  document.addEventListener('input',height);
+  height();
+})();
+</script></body></html>

@@ -1,0 +1,900 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- ==========================================================================
+     DUBAI-IMMOBILIEN · STRUKTUR- UND RENDITERECHNER  (Single-Page-Widget)
+     Rechenkern 1:1 nach "Dubai_Immobilien_Investitionsmodell.xlsx"
+     Blätter 01 Annahmen · 02 Erwerb · 03 Finanzierung · 04 Cashflow · 07/08 Steuern
+     Stack: HTML + Vanilla JS + precompiled Tailwind · responsive · dark mode
+     BLACK PEARL build: standalone HTML document, intended to be embedded in Framer
+     via <iframe> at /tools/real-estate-returns. Calculation engine unchanged.
+     Booking CTA is inert; see the BLACK PEARL integration layer at the end of file.
+     ========================================================================== -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Real Estate Returns — BLACK PEARL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS, fuer dieses Widget vorkompiliert und eingebettet (Utilities inkl. Dark-Mode-
+     Varianten und der Navy-Palette). Kein externer CSS-/JS-Aufruf, kein Preflight-Reset,
+     daher keinerlei Rueckwirkung auf das Layout der uebrigen Website. -->
+<style>*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }.pointer-events-none{pointer-events:none}.absolute{position:absolute}.relative{position:relative}.inset-x-0{left:0;right:0}.-bottom-20{bottom:-5rem}.-right-16{right:-4rem}.-top-16{top:-4rem}.left-1\/3{left:33.333333%}.right-3\.5{right:.875rem}.top-0{top:0}.top-1\/2{top:50%}.order-1{order:1}.order-2{order:2}.order-3{order:3}.col-span-1{grid-column:span 1/span 1}.col-span-2{grid-column:span 2/span 2}.-mx-1{margin-left:-.25rem;margin-right:-.25rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-2\.5{margin-bottom:.625rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-8{margin-bottom:2rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-2\.5{margin-top:.625rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.h-1\.5{height:.375rem}.h-2\.5{height:.625rem}.h-4{height:1rem}.h-48{height:12rem}.h-56{height:14rem}.h-7{height:1.75rem}.h-\[18px\]{height:18px}.h-\[38px\]{height:38px}.h-\[3px\]{height:3px}.w-1\.5{width:.375rem}.w-2\.5{width:.625rem}.w-4{width:1rem}.w-48{width:12rem}.w-56{width:14rem}.w-7{width:1.75rem}.w-\[122px\]{width:122px}.w-\[18px\]{width:18px}.w-\[30px\]{width:30px}.w-\[38px\]{width:38px}.w-full{width:100%}.min-w-\[560px\]{min-width:560px}.max-w-2xl{max-width:42rem}.max-w-\[1220px\]{max-width:1220px}.max-w-xl{max-width:36rem}.shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.list-none{list-style-type:none}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.place-items-center{place-items:center}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-x-8{-moz-column-gap:2rem;column-gap:2rem}.gap-y-2{row-gap:.5rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-\[3px\]{border-radius:3px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-emerald-500\/25{border-color:rgba(16,185,129,.25)}.border-emerald-500\/30{border-color:rgba(16,185,129,.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.bg-amber-400\/15{background-color:rgba(251,191,36,.15)}.bg-amber-500\/10{background-color:rgba(245,158,11,.1)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.bg-emerald-500\/10{background-color:rgba(16,185,129,.1)}.bg-emerald-500\/20{background-color:rgba(16,185,129,.2)}.bg-emerald-500\/\[0\.07\]{background-color:rgba(16,185,129,.07)}.bg-navy-700{--tw-bg-opacity:1;background-color:rgb(27 58 105/var(--tw-bg-opacity,1))}.bg-navy-900{--tw-bg-opacity:1;background-color:rgb(10 27 51/var(--tw-bg-opacity,1))}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233/var(--tw-bg-opacity,1))}.bg-sky-500\/10{background-color:rgba(14,165,233,.1)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-emerald-400{--tw-gradient-from:#34d399 var(--tw-gradient-from-position);--tw-gradient-to:rgba(52,211,153,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-rose-400{--tw-gradient-from:#fb7185 var(--tw-gradient-from-position);--tw-gradient-to:rgba(251,113,133,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-sky-400{--tw-gradient-from:#38bdf8 var(--tw-gradient-from-position);--tw-gradient-to:rgba(56,189,248,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-emerald-500{--tw-gradient-to:#10b981 var(--tw-gradient-to-position)}.to-emerald-600{--tw-gradient-to:#059669 var(--tw-gradient-to-position)}.to-rose-600{--tw-gradient-to:#e11d48 var(--tw-gradient-to-position)}.p-1{padding:.25rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pr-10{padding-right:2.5rem}.pt-3{padding-top:.75rem}.pt-3\.5{padding-top:.875rem}.text-left{text-align:left}.text-right{text-align:right}.text-\[10\.5px\]{font-size:10.5px}.text-\[11\.5px\]{font-size:11.5px}.text-\[11px\]{font-size:11px}.text-\[12\.5px\]{font-size:12.5px}.text-\[12px\]{font-size:12px}.text-\[13\.5px\]{font-size:13.5px}.text-\[13px\]{font-size:13px}.text-\[14\.5px\]{font-size:14.5px}.text-\[14px\]{font-size:14px}.text-\[15px\]{font-size:15px}.text-\[16px\]{font-size:16px}.text-\[19px\]{font-size:19px}.text-\[21px\]{font-size:21px}.text-\[26px\]{font-size:26px}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-\[0\.13em\]{letter-spacing:.13em}.tracking-\[0\.14em\]{letter-spacing:.14em}.tracking-\[0\.16em\]{letter-spacing:.16em}.tracking-\[0\.1em\]{letter-spacing:.1em}.tracking-tight{letter-spacing:-.025em}.tracking-wider{letter-spacing:.05em}.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-navy-950{--tw-text-opacity:1;color:rgb(5 13 27/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.accent-emerald-500{accent-color:#10b981}.shadow-card{--tw-shadow:0 1px 2px rgba(5,13,27,.06),0 8px 24px -12px rgba(5,13,27,.18);--tw-shadow-colored:0 1px 2px var(--tw-shadow-color),0 8px 24px -12px var(--tw-shadow-color)}.shadow-card,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-emerald-500\/25{--tw-shadow-color:rgba(16,185,129,.25);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.blur{--tw-blur:blur(8px)}.blur,.blur-3xl{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-3xl{--tw-blur:blur(64px)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-300{transition-duration:.3s}.hover\:border-emerald-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.hover\:bg-emerald-400:hover{--tw-bg-opacity:1;background-color:rgb(52 211 153/var(--tw-bg-opacity,1))}.hover\:text-emerald-600:hover{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.focus\:border-emerald-500:focus{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-emerald-500\/25:focus{--tw-ring-color:rgba(16,185,129,.25)}.focus-visible\:outline:focus-visible{outline-style:solid}.focus-visible\:outline-2:focus-visible{outline-width:2px}.focus-visible\:outline-offset-2:focus-visible{outline-offset:2px}.focus-visible\:outline-emerald-300:focus-visible{outline-color:#6ee7b7}.group[open] .group-open\:rotate-180{--tw-rotate:180deg}.group:hover .group-hover\:translate-x-0\.5,.group[open] .group-open\:rotate-180{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:translate-x-0\.5{--tw-translate-x:0.125rem}.dark\:border-white\/10:is(.dark *){border-color:hsla(0,0%,100%,.1)}.dark\:border-white\/5:is(.dark *){border-color:hsla(0,0%,100%,.05)}.dark\:bg-navy-850:is(.dark *){--tw-bg-opacity:1;background-color:rgb(14 36 68/var(--tw-bg-opacity,1))}.dark\:bg-navy-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(10 27 51/var(--tw-bg-opacity,1))}.dark\:bg-navy-950:is(.dark *){--tw-bg-opacity:1;background-color:rgb(5 13 27/var(--tw-bg-opacity,1))}.dark\:bg-slate-400:is(.dark *){--tw-bg-opacity:1;background-color:rgb(148 163 184/var(--tw-bg-opacity,1))}.dark\:text-amber-300:is(.dark *){--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.dark\:text-amber-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.dark\:text-emerald-300:is(.dark *){--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.dark\:text-emerald-400:is(.dark *){--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.dark\:text-rose-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 113 133/var(--tw-text-opacity,1))}.dark\:text-sky-300:is(.dark *){--tw-text-opacity:1;color:rgb(125 211 252/var(--tw-text-opacity,1))}.dark\:text-slate-100:is(.dark *){--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.dark\:text-slate-300:is(.dark *){--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.dark\:text-slate-400:is(.dark *){--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.dark\:hover\:text-emerald-300:hover:is(.dark *){--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.dark\:hover\:text-slate-100:hover:is(.dark *){--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}@media (min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:justify-between{justify-content:space-between}.sm\:p-6{padding:1.5rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-12{padding-top:3rem;padding-bottom:3rem}.sm\:text-\[21px\]{font-size:21px}.sm\:text-\[24px\]{font-size:24px}.sm\:text-\[34px\]{font-size:34px}}@media (min-width:768px){.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:1024px){.lg\:order-1{order:1}.lg\:order-2{order:2}.lg\:col-span-12{grid-column:span 12/span 12}.lg\:col-span-4{grid-column:span 4/span 4}.lg\:col-span-8{grid-column:span 8/span 8}.lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}</style>
+
+<style>
+/* --- gekapselter Reset ----------------------------------------------------
+   Alle Selektoren stehen in :where(), haben also Spezifitaet 0. Dadurch
+   ueberschreiben die Tailwind-Utilities den Reset zuverlaessig, und der Reset
+   wirkt zugleich ausschliesslich innerhalb des Widgets. -------------------- */
+:where(#dxb-widget),:where(#dxb-widget) :where(*,*::before,*::after){box-sizing:border-box;border-width:0;border-style:solid;border-color:currentColor}
+:where(#dxb-widget){margin:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.5;font-size:16px}
+:where(#dxb-widget) :where(h1,h2,h3,h4,p,figure){margin:0;font-size:inherit;font-weight:inherit}
+:where(#dxb-widget) :where(ul,ol){margin:0;padding:0;list-style:none}
+:where(#dxb-widget) :where(button,input,select,label,summary){font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0;background-color:transparent}
+:where(#dxb-widget) :where(button){cursor:pointer;-webkit-appearance:none;appearance:none}
+:where(#dxb-widget) :where(select){-webkit-appearance:none;appearance:none}
+:where(#dxb-widget) :where(table){border-collapse:collapse;width:100%;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;line-height:inherit}
+:where(#dxb-widget) :where(th,td){padding:0;text-align:inherit;font-weight:inherit}
+:where(#dxb-widget) :where(svg){display:block}
+:where(#dxb-widget) :where(a){color:inherit;text-decoration:none}
+:where(#dxb-widget) :where(summary){display:block}
+:where(#dxb-widget) :where(summary)::-webkit-details-marker{display:none}
+#dxb-widget .tnum{font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
+
+/* --- Schieberegler --------------------------------------------------------- */
+#dxb-widget input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;display:block}
+#dxb-widget input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:9999px;background:var(--dxb-track)}
+#dxb-widget input[type=range]::-moz-range-track{height:6px;border-radius:9999px;background:var(--dxb-track)}
+#dxb-widget input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:9999px;background:#10b981;border:3px solid var(--dxb-thumbring);box-shadow:0 1px 6px rgba(16,185,129,.55);transition:transform .12s ease}
+#dxb-widget input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:9999px;background:#10b981;border:3px solid var(--dxb-thumbring);box-shadow:0 1px 6px rgba(16,185,129,.55)}
+#dxb-widget input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.12)}
+#dxb-widget input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid #34d399;outline-offset:2px}
+#dxb-widget{--dxb-track:linear-gradient(90deg,#10b981 var(--p,50%),#cbd5e1 var(--p,50%));--dxb-thumbring:#ffffff}
+#dxb-widget.dark{--dxb-track:linear-gradient(90deg,#34d399 var(--p,50%),#1B3A69 var(--p,50%));--dxb-thumbring:#0A1B33}
+#dxb-widget input[type=number]::-webkit-outer-spin-button,#dxb-widget input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#dxb-widget input[type=number]{-moz-appearance:textfield}
+#dxb-widget .dxb-fade{animation:dxbfade .35s ease both}
+@keyframes dxbfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#dxb-widget *{animation:none!important;transition:none!important}}
+</style>
+
+<style>
+/* ===================================================================
+   BLACK PEARL Farbueberlagerung (Master Specification v3, §2.3)
+   Legt sich ueber die vorkompilierte Tailwind-Schicht. Aendert ausschliesslich
+   Farben, Schrift und Radien - keine Layout-, Groessen- oder Logikregeln.
+   Vollstaendig entfernbar: ohne diesen Block erscheint wieder die Navy-Optik.
+   =================================================================== */
+/* --- Flaechen hell --- */
+#dxb-widget .bg-slate-50{background-color:#F3F0EA}
+#dxb-widget .bg-white{background-color:#FCFBF8}
+#dxb-widget .bg-slate-100{background-color:#EDE9E1}
+/* --- Linien hell --- */
+#dxb-widget .border-slate-200{border-color:#DCD8D0}
+#dxb-widget .border-slate-100{border-color:#E6E2DA}
+/* --- Text hell --- */
+#dxb-widget .text-slate-900{color:#161616}
+#dxb-widget .text-slate-700{color:#3A3833}
+#dxb-widget .text-slate-600{color:#57544E}
+#dxb-widget .text-slate-500{color:#8E8B86}
+#dxb-widget .text-slate-400{color:#A5A29C}
+#dxb-widget .text-navy-950{color:#0B0B0B}
+/* --- Akzent: gedecktes Salbei statt Signalgruen, kein Gold --- */
+#dxb-widget .bg-emerald-500{background-color:#2E4A43}
+#dxb-widget .text-emerald-600,#dxb-widget .text-emerald-700{color:#2E4A43}
+#dxb-widget .border-emerald-500\/25{border-color:rgba(46,74,67,.25)}
+#dxb-widget .border-emerald-500\/30{border-color:rgba(46,74,67,.3)}
+#dxb-widget .bg-emerald-500\/10{background-color:rgba(46,74,67,.08)}
+#dxb-widget .bg-emerald-500\/20{background-color:rgba(46,74,67,.16)}
+#dxb-widget .bg-emerald-500\/\[0\.07\]{background-color:rgba(46,74,67,.06)}
+#dxb-widget .from-emerald-400{--tw-gradient-from:#3C5F56 var(--tw-gradient-from-position);--tw-gradient-to:rgba(60,95,86,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}
+#dxb-widget .to-emerald-500,#dxb-widget .to-emerald-600{--tw-gradient-to:#2E4A43 var(--tw-gradient-to-position)}
+#dxb-widget .hover\:bg-emerald-400:hover{background-color:#3C5F56}
+#dxb-widget .hover\:text-emerald-600:hover{color:#2E4A43}
+#dxb-widget .accent-emerald-500{accent-color:#2E4A43}
+#dxb-widget .shadow-emerald-500\/25{--tw-shadow-color:rgba(46,74,67,.22);--tw-shadow:var(--tw-shadow-colored)}
+#dxb-widget .focus\:ring-emerald-500\/25:focus{--tw-ring-color:rgba(46,74,67,.25)}
+#dxb-widget .focus\:border-emerald-500:focus,#dxb-widget .hover\:border-emerald-500:hover{border-color:#2E4A43}
+/* --- Warn-/Negativtoene entsaettigt --- */
+#dxb-widget .text-amber-600,#dxb-widget .text-amber-700{color:#6B5426}
+#dxb-widget .bg-amber-500\/10{background-color:rgba(107,84,38,.10)}
+#dxb-widget .bg-amber-400\/15{background-color:rgba(107,84,38,.14)}
+#dxb-widget .text-rose-600{color:#6E2F2F}
+#dxb-widget .from-rose-400{--tw-gradient-from:#8A4141 var(--tw-gradient-from-position);--tw-gradient-to:rgba(138,65,65,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}
+#dxb-widget .to-rose-600{--tw-gradient-to:#6E2F2F var(--tw-gradient-to-position)}
+#dxb-widget .text-sky-600{color:#4A5A66}
+#dxb-widget .bg-sky-500,#dxb-widget .bg-sky-500\/10{background-color:rgba(74,90,102,.10)}
+#dxb-widget .from-sky-400{--tw-gradient-from:#6B7C88 var(--tw-gradient-from-position);--tw-gradient-to:rgba(107,124,136,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}
+/* --- Dunkles Thema: Navy -> BLACK PEARL Dark --- */
+#dxb-widget.dark .dark\:bg-navy-950{background-color:#0B0B0B}
+#dxb-widget.dark .dark\:bg-navy-900{background-color:#141414}
+#dxb-widget.dark .dark\:bg-navy-850{background-color:#1C1C1C}
+#dxb-widget.dark .dark\:border-white\/10{border-color:rgba(244,241,235,.12)}
+#dxb-widget.dark .dark\:border-white\/5{border-color:rgba(244,241,235,.06)}
+#dxb-widget.dark .dark\:text-white,#dxb-widget.dark .dark\:text-slate-100,#dxb-widget.dark .dark\:text-slate-200{color:#F4F1EB}
+#dxb-widget.dark .dark\:text-slate-300{color:#C9C5BD}
+#dxb-widget.dark .dark\:text-slate-400{color:#8E8B86}
+#dxb-widget.dark .dark\:text-emerald-300,#dxb-widget.dark .dark\:text-emerald-400{color:#9BB3A8}
+#dxb-widget.dark .dark\:text-amber-300,#dxb-widget.dark .dark\:text-amber-400{color:#C2A878}
+#dxb-widget.dark .dark\:text-rose-400{color:#C08C8C}
+#dxb-widget.dark .dark\:text-sky-300{color:#9DB0BC}
+#dxb-widget.dark .dark\:hover\:text-emerald-300:hover{color:#9BB3A8}
+/* --- Schieberegler --- */
+#dxb-widget{--dxb-track:linear-gradient(90deg,#2E4A43 var(--p,50%),#DCD8D0 var(--p,50%));--dxb-thumbring:#FCFBF8}
+#dxb-widget.dark{--dxb-track:linear-gradient(90deg,#9BB3A8 var(--p,50%),#2A2A2A var(--p,50%));--dxb-thumbring:#0B0B0B}
+#dxb-widget input[type=range]::-webkit-slider-thumb{background:#2E4A43;box-shadow:0 1px 4px rgba(22,22,22,.30)}
+#dxb-widget input[type=range]::-moz-range-thumb{background:#2E4A43}
+#dxb-widget input[type=range]:focus-visible::-webkit-slider-thumb{outline-color:#2E4A43}
+/* --- Typografie: editoriale Serife fuer die Hauptueberschrift --- */
+#dxb-widget h1{font-family:"DM Serif Display",Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.01em}
+/* --- Geometrie: eckiger, §2.3 "square/low-radius" --- */
+#dxb-widget .rounded-2xl{border-radius:3px}
+#dxb-widget .rounded-xl{border-radius:2px}
+#dxb-widget .rounded-lg{border-radius:2px}
+#dxb-widget .shadow-card{--tw-shadow:0 1px 2px rgba(22,22,22,.05),0 8px 24px -14px rgba(22,22,22,.14)}
+</style>
+
+</head><body>
+<div id="dxb-widget" class="dxb">
+<div class="bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<div class="mx-auto w-full max-w-[1220px] px-4 sm:px-6 py-8 sm:py-12">
+
+  <!-- ================= KOPF ================= -->
+  <header class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Dubai · Real Estate Structuring
+      </div>
+      <h1 class="text-[26px] sm:text-[34px] font-bold leading-tight tracking-tight">Return Calculator with Structure Comparison</h1>
+      <p class="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+        NOI, cash-on-cash, DSCR and the after-tax return in real time &ndash; including the tax wedge that has
+        re-emerged since the Germany&ndash;UAE double taxation agreement lapsed on 31 December 2021.
+     
+
+      <!-- Cross-tool navigation intentionally removed: it pointed to the previous
+           project's files. In BLACK PEARL the /tools hub in Framer handles navigation
+           between the modules, not the embedded iframe. -->
+
+    </div>
+    
+    <div class="flex shrink-0 items-center gap-2">
+      <div class="flex rounded-xl border border-slate-200 bg-white p-1 dark:border-white/10 dark:bg-navy-900">
+        <button data-cur="AED" class="dxb-cur rounded-lg px-3 py-1.5 text-[13px] font-semibold transition">AED</button>
+        <button data-cur="EUR" class="dxb-cur rounded-lg px-3 py-1.5 text-[13px] font-semibold transition">EUR</button>
+      </div>
+      <button id="dxb-theme" aria-label="Farbschema wechseln"
+        class="grid h-[38px] w-[38px] place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:text-emerald-600 dark:border-white/10 dark:bg-navy-900 dark:text-slate-300 dark:hover:text-emerald-300">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-[18px] w-[18px]"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+
+    <!-- KPI-Karten: volle Breite, damit Kennzahl und Zusatzzeilen ungekuerzt stehen -->
+    <div class="order-2 lg:order-1 lg:col-span-12">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+    <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900">
+      <div class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+      <div class="mb-3 flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">NOI year 1</span>
+        <span class="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M3 21h18M6 21V9l6-5 6 5v12M10 21v-5h4v5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div id="k-noi" class="tnum text-[21px] sm:text-[24px] font-bold leading-none tracking-tight whitespace-nowrap">&ndash;</div>
+      <div class="mt-2.5 space-y-1 text-[11.5px] text-slate-500 dark:text-slate-400">
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Cap rate (total investment)</span><span id="k-noi-s1" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Gross yield (purchase price)</span><span id="k-noi-s2" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+      </div>
+    </div>
+
+    <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900">
+      <div class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+      <div class="mb-3 flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">Cash-on-Cash</span>
+        <span class="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M3 17 9 11l4 4 8-8M21 7v5h-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div id="k-coc" class="tnum text-[21px] sm:text-[24px] font-bold leading-none tracking-tight whitespace-nowrap">&ndash;</div>
+      <div class="mt-2.5 space-y-1 text-[11.5px] text-slate-500 dark:text-slate-400">
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">pre-tax</span><span id="k-coc-s1" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Eigenkapital</span><span id="k-coc-s2" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+      </div>
+    </div>
+
+    <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900">
+      <div id="k-dscr-bar" class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+      <div class="mb-3 flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">DSCR year 1</span>
+        <span class="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M12 3v18M5 8h9a3 3 0 0 1 0 6H5m0 0h10" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div id="k-dscr" class="tnum text-[21px] sm:text-[24px] font-bold leading-none tracking-tight whitespace-nowrap">&ndash;</div>
+      <div class="mt-2.5 space-y-1 text-[11.5px] text-slate-500 dark:text-slate-400">
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Minimum over term</span><span id="k-dscr-s1" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Interest cover (ICR)</span><span id="k-dscr-s2" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+      </div>
+    </div>
+
+    <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900">
+      <div class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-sky-400 to-emerald-500"></div>
+      <div class="mb-3 flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">After-tax return</span>
+        <span class="grid h-7 w-7 place-items-center rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M4 20 20 4M8.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm10 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="flex items-baseline gap-2">
+        <div id="k-ret-de" class="tnum text-[21px] sm:text-[24px] font-bold leading-none tracking-tight whitespace-nowrap">&ndash;</div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">DE</span>
+      </div>
+      <div class="mt-2.5 space-y-1 text-[11.5px] text-slate-500 dark:text-slate-400">
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">UAE level only</span><span id="k-ret-ae" class="tnum shrink-0 font-semibold text-slate-700 dark:text-slate-200">&ndash;</span></div>
+        <div class="flex items-baseline justify-between gap-2"><span class="truncate">Tax wedge, no DTA</span><span id="k-ret-gap" class="tnum shrink-0 font-semibold text-rose-600 dark:text-rose-400">&ndash;</span></div>
+      </div>
+    </div>
+  </div>
+    </div>
+
+    <!-- ================= EINGABEN ================= -->
+    <section class="order-1 lg:order-2 lg:col-span-4">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900 sm:p-6">
+        <h2 class="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Inputs</h2>
+        <p class="mb-5 text-[13px] text-slate-500 dark:text-slate-400">Every change recalculates the model immediately.</p>
+
+        <div id="dxb-inputs" class="space-y-5">
+
+          <div data-field="kp">
+            <div class="mb-1.5 flex items-baseline justify-between gap-3">
+              <label for="i-kp" class="text-[13.5px] font-semibold">Purchase price</label>
+              <div class="flex items-center gap-1.5">
+                <input id="i-kp" type="text" inputmode="numeric" autocomplete="off"
+                  class="tnum w-[122px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-right text-[13.5px] font-semibold tabular-nums outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 dark:border-white/10 dark:bg-navy-850">
+                <span class="dxb-unit w-[30px] text-[12px] font-semibold text-slate-400">AED</span>
+              </div>
+            </div>
+            <input id="s-kp" type="range" min="300000" max="15000000" step="25000" aria-label="Kaufpreis">
+            <div class="mt-0.5 flex justify-between text-[11px] text-slate-400"><span>300k</span><span>15m</span></div>
+          </div>
+
+          <div data-field="rent">
+            <div class="mb-1.5 flex items-baseline justify-between gap-3">
+              <label for="i-rent" class="text-[13.5px] font-semibold">Expected annual rent</label>
+              <div class="flex items-center gap-1.5">
+                <input id="i-rent" type="text" inputmode="numeric" autocomplete="off"
+                  class="tnum w-[122px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-right text-[13.5px] font-semibold tabular-nums outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 dark:border-white/10 dark:bg-navy-850">
+                <span class="dxb-unit w-[30px] text-[12px] font-semibold text-slate-400">AED</span>
+              </div>
+            </div>
+            <input id="s-rent" type="range" min="10000" max="1200000" step="1000" aria-label="Expected annual rent">
+            <div class="mt-0.5 flex justify-between text-[11px] text-slate-400">
+              <span>Contract rent at full occupancy (PGI)</span><span id="o-grossyield" class="tnum font-semibold text-slate-500 dark:text-slate-400">&ndash;</span>
+            </div>
+          </div>
+
+          <div data-field="ltv">
+            <div class="mb-1.5 flex items-baseline justify-between gap-3">
+              <label for="i-ltv" class="text-[13.5px] font-semibold">Loan-to-value (LTV)</label>
+              <div class="flex items-center gap-1.5">
+                <input id="i-ltv" type="number" step="1" min="0" max="80"
+                  class="tnum w-[122px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-right text-[13.5px] font-semibold tabular-nums outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 dark:border-white/10 dark:bg-navy-850">
+                <span class="w-[30px] text-[12px] font-semibold text-slate-400">%</span>
+              </div>
+            </div>
+            <input id="s-ltv" type="range" min="0" max="80" step="1" aria-label="Fremdkapitalquote">
+            <div class="mt-0.5 flex justify-between text-[11px] text-slate-400">
+              <span>Eigenkapitalquote <span id="o-eqratio" class="tnum font-semibold">&ndash;</span></span>
+              <span id="o-ltvnote" class="font-semibold"></span>
+            </div>
+          </div>
+
+          <div data-field="rate">
+            <div class="mb-1.5 flex items-baseline justify-between gap-3">
+              <label for="i-rate" class="text-[13.5px] font-semibold">Interest rate p.a.</label>
+              <div class="flex items-center gap-1.5">
+                <input id="i-rate" type="number" step="0.05" min="0" max="15"
+                  class="tnum w-[122px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-right text-[13.5px] font-semibold tabular-nums outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 dark:border-white/10 dark:bg-navy-850">
+                <span class="w-[30px] text-[12px] font-semibold text-slate-400">%</span>
+              </div>
+            </div>
+            <input id="s-rate" type="range" min="0" max="12" step="0.05" aria-label="Zinssatz">
+            <div class="mt-0.5 flex justify-between text-[11px] text-slate-400">
+              <span>Annuity, <span id="o-term" class="tnum font-semibold">25</span>&nbsp;years, monthly</span>
+              <span id="o-annuity" class="tnum font-semibold">&ndash;</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="i-struktur" class="mb-1.5 block text-[13.5px] font-semibold">Holding structure</label>
+            <div class="relative">
+              <select id="i-struktur"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-[14px] font-semibold outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 dark:border-white/10 dark:bg-navy-850">
+                <option value="pv">Private assets Germany (natural person)</option>
+                <option value="qfzp">UAE Free Zone company (QFZP)</option>
+                <option value="gmbh">German holding GmbH</option>
+              </select>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p id="o-strukturnote" class="mt-2 rounded-lg bg-slate-100 px-3 py-2 text-[12px] leading-relaxed text-slate-600 dark:bg-navy-850 dark:text-slate-300"></p>
+          </div>
+
+          <!-- ---- erweiterte Annahmen ---- -->
+          <details class="group rounded-xl border border-slate-200 dark:border-white/10">
+            <summary class="flex cursor-pointer list-none items-center justify-between px-3.5 py-2.5 text-[13px] font-semibold text-slate-600 dark:text-slate-300">
+              Advanced assumptions
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition group-open:rotate-180"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="grid grid-cols-2 gap-3 border-t border-slate-200 px-3.5 py-3.5 dark:border-white/10">
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Lettable area (sqft)
+                <input id="a-sqft" type="number" step="10" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Vacancy (%)
+                <input id="a-vac" type="number" step="0.5" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Service Charge (AED/sqft)
+                <input id="a-sc" type="number" step="1" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Mietwachstum p.&nbsp;a. (%)
+                <input id="a-growth" type="number" step="0.25" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Exit cap rate (%)
+                <input id="a-exitcap" type="number" step="0.05" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Holding period (years)
+                <input id="a-hold" type="number" step="1" min="1" max="15" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Mindest-DSCR
+                <input id="a-dscr" type="number" step="0.05" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Reg. LTV cap (%)
+                <input id="a-ltvcap" type="number" step="1" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
+              <label class="col-span-2 mt-1 flex items-center gap-2 text-[12px] font-medium text-slate-600 dark:text-slate-300">
+                <input id="a-dscrtest" type="checkbox" class="h-4 w-4 accent-emerald-500">
+                Debt-Sizing-Doppeltest (LTV <span class="font-bold">und</span> DSCR) anwenden
+              </label>
+              <button id="a-reset" class="col-span-2 mt-1 rounded-lg border border-slate-200 px-3 py-1.5 text-[12px] font-semibold text-slate-500 transition hover:border-emerald-500 hover:text-emerald-600 dark:border-white/10 dark:text-slate-400 dark:hover:text-emerald-300">Reset to model values</button>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= AUSGABEN ================= -->
+    <section class="order-3 lg:col-span-8 space-y-6">
+
+      <!-- Steuerbrücke -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900 sm:p-6">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-[15px] font-bold tracking-tight">Tax bridge year 1 &ndash; UAE versus Germany</h2>
+          <span class="rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Germany&ndash;UAE DTA lapsed 1 Jan 2022, no successor</span>
+        </div>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div class="rounded-xl bg-slate-50 p-4 dark:bg-navy-850">
+            <div class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">UAE level</div>
+            <ul id="t-uae" class="space-y-1.5 text-[12.5px]"></ul>
+          </div>
+          <div class="rounded-xl bg-slate-50 p-4 dark:bg-navy-850">
+            <div class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">Germany level</div>
+            <ul id="t-de" class="space-y-1.5 text-[12.5px]"></ul>
+          </div>
+          <div class="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.07] p-4">
+            <div class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.13em] text-emerald-700 dark:text-emerald-300">Result</div>
+            <ul id="t-sum" class="space-y-1.5 text-[12.5px]"></ul>
+          </div>
+        </div>
+        <p id="t-legal" class="mt-4 border-t border-slate-200 pt-3.5 text-[12px] leading-relaxed text-slate-500 dark:border-white/10 dark:text-slate-400"></p>
+      </div>
+
+      <!-- 5-Jahres-Verlauf -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900 sm:p-6">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-[15px] font-bold tracking-tight">Cash flow, years 1 to 5</h2>
+          <div class="flex flex-wrap items-center gap-3 text-[11.5px] font-semibold text-slate-500 dark:text-slate-400">
+            <span class="flex items-center gap-1.5"><i class="inline-block h-2.5 w-2.5 rounded-[3px] bg-emerald-500"></i>NOI</span>
+            <span class="flex items-center gap-1.5"><i class="inline-block h-2.5 w-2.5 rounded-[3px] bg-navy-700 dark:bg-slate-400"></i>Kapitaldienst</span>
+            <span class="flex items-center gap-1.5"><i class="inline-block h-2.5 w-2.5 rounded-[3px] bg-sky-500"></i>Cashflow nach Steuern</span>
+          </div>
+        </div>
+        <div id="chart" class="w-full"></div>
+        <div class="mt-4 -mx-1 overflow-x-auto">
+          <table class="tnum min-w-[560px] text-[12.5px] text-slate-900 dark:text-slate-100">
+            <thead>
+              <tr class="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:border-white/10 dark:text-slate-400">
+                <th class="px-1 py-2 font-bold">Position</th>
+                <th class="px-1 py-2 text-right font-bold">Jahr 1</th><th class="px-1 py-2 text-right font-bold">Jahr 2</th>
+                <th class="px-1 py-2 text-right font-bold">Jahr 3</th><th class="px-1 py-2 text-right font-bold">Jahr 4</th>
+                <th class="px-1 py-2 text-right font-bold">Jahr 5</th>
+              </tr>
+            </thead>
+            <tbody id="cf-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Kennzahlenleiste -->
+      <div id="mini" class="grid grid-cols-2 gap-3 sm:grid-cols-3"></div>
+
+      <!-- CTA -->
+      <div class="relative overflow-hidden rounded-2xl bg-navy-900 p-6 dark:bg-navy-850 sm:p-8">
+        <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-emerald-500/20 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-20 left-1/3 h-48 w-48 rounded-full bg-sky-500/10 blur-3xl"></div>
+        <div class="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="max-w-xl">
+            <h3 class="text-[19px] font-bold tracking-tight text-white sm:text-[21px]">Which holding structure fits your case?</h3>
+            <p class="mt-2 text-[13.5px] leading-relaxed text-slate-300">
+              This widget computes a model. Whether CFC taxation, § 23 EStG, exit taxation or Free Zone
+              status apply in your specific case is decided by details no calculator knows. We review
+              your constellation in 30 minutes.
+            </p>
+          </div>
+          <button type="button" id="cta"
+            class="group inline-flex cursor-pointer border-0 shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3.5 text-[14.5px] font-bold text-navy-950 shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+            Book a Consultation
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-4 w-4 transition group-hover:translate-x-0.5"><path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Fussnoten -->
+  <footer class="mt-8 rounded-2xl border border-slate-200 bg-white p-5 text-[11.5px] leading-relaxed text-slate-500 shadow-card dark:border-white/10 dark:bg-navy-900 dark:text-slate-400 sm:p-6">
+    <div class="mb-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600 dark:text-slate-300">Model assumptions and legal basis</div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-2">
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">Acquisition costs:</strong> DLD transfer 4&nbsp;% plus AED&nbsp;580 admin, trustee AED&nbsp;4,200 plus 5&nbsp;% VAT, title deed AED&nbsp;500, NOC AED&nbsp;2,000, agent 2&nbsp;% plus VAT, valuation AED&nbsp;3,000, mortgage registration 0.25&nbsp;% plus AED&nbsp;290, bank fee 1&nbsp;% (the last three only where debt-financed).</p>
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">Operations:</strong> vacancy 6&nbsp;% of PGI, service charge 18 AED/sqft, maintenance and property management 5&nbsp;% of EGI each, insurance AED&nbsp;3,000; rent and cost growth 3&nbsp;% p.a. each.</p>
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">Financing:</strong> annuity loan, 25 years, monthly payment. Debt sizing as a double test: loan = MIN(LTV limit; present value of the debt service sustainable at the minimum DSCR). Regulatory LTV cap 60&nbsp;%.</p>
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">UAE:</strong> corporate tax 9&nbsp;% above AED&nbsp;375,000 (Federal Decree-Law No. 47/2022). Natural persons are not taxable on privately held real estate (Cabinet Decision No. 49/2023). Residential property regularly yields no Qualifying Income for a Free Zone person (Cabinet Decision No. 100/2023), hence 9&nbsp;% in the QFZP case as well. Nexus of non-resident juridical persons: Cabinet Decision No. 56/2023. Interest limitation: 30&nbsp;% EBITDA, safe harbour AED&nbsp;12m.</p>
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">Germany:</strong> the Germany&ndash;UAE double taxation agreement (2010) expired on 31 December 2021; no successor agreement exists. Exemption therefore does not apply; what remains is credit relief under § 34c EStG and § 26 KStG respectively. Building depreciation 2&nbsp;% (§ 7(4) EStG) on 80&nbsp;% of the purchase price. Marginal rate 45&nbsp;% plus 5.5&nbsp;% solidarity surcharge = 47.475&nbsp;%; corporate income tax incl. solidarity surcharge 15.825&nbsp;%, trade tax reduced under § 9 no. 3 GewStG.</p>
+      <p><strong class="font-semibold text-slate-700 dark:text-slate-200">CFC rules:</strong> for the Free Zone company §§ 7 et seq. AStG apply, because control, passive income and low taxation (9&nbsp;% &lt; 15&nbsp;%, § 8(5) AStG) are present and the substance test of § 8(2) AStG is not available for third countries; the UAE tax is credited under § 12 AStG. On exit from private assets, § 23 EStG applies within the ten-year period.</p>
+    </div>
+    <p class="mt-4 border-t border-slate-200 pt-3 dark:border-white/10">
+      All figures are a non-binding model calculation based on the parameters entered and do not replace
+      tax or legal advice in an individual case. EUR/AED conversion at 4.2769. Legal position: 2026.
+    </p>
+  </footer>
+</div>
+</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* TODO (Master Specification v3, §10): booking provider not yet selected.
+     The CTA does NOT trigger a booking; it reports the intent to the embedding
+     window. See the BLACK PEARL integration layer at the end of this file. */
+  /* ====================================================================== */
+
+  const root = document.getElementById('dxb-widget');
+  const KPICLS = 'tnum text-[21px] sm:text-[24px] font-bold leading-none tracking-tight whitespace-nowrap';
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- Modellkonstanten (Blatt 01_Annahmen) ---------- */
+  const P = {
+    fx: 4.2769,
+    dld: 0.04, dldAdmin: 580, trustee: 4200, titleDeed: 500, noc: 2000,
+    broker: 0.02, valuation: 3000, mortRegRate: 0.0025, mortRegFix: 290,
+    bankFee: 0.01, vat: 0.05,
+    maintenance: 0.05, propMgmt: 0.05, insurance: 3000, costGrowth: 0.03,
+    termYears: 25, payPerYear: 12,
+    sellingCosts: 0.02,
+    uaeCT: 0.09, ctAllowance: 375000, buildingShare: 0.80, ndUAE: 40,
+    gidlRatio: 0.30, gidlSafeHarbour: 12000000,
+    estEff: 0.47475,           // 45 % ESt zzgl. 5,5 % SolZ
+    kstEff: 0.15825,           // 15 % KSt zzgl. 5,5 % SolZ, GewSt § 9 Nr. 3 GewStG
+    afaDE: 0.02,               // § 7 Abs. 4 EStG
+    rentPerSqft: 132,          // Ableitung der Fläche aus der Miete (Modellwert)
+    ke: 0.1105, wacc: 0.070135
+  };
+
+  const DEFAULTS = {
+    kp: 2000000, rent: 132000, ltv: 60, rate: 4.75, struktur: 'pv',
+    sqft: 1000, vac: 6, sc: 18, growth: 3, exitcap: 4.75, hold: 10,
+    dscrMin: 1.25, ltvCap: 60, dscrTest: true
+  };
+  const S = Object.assign({}, DEFAULTS);
+  let sqftTouched = false;
+  let CUR = 'AED';
+
+  /* ---------- Finanzmathematik ---------- */
+  const pmt = (i, n, pv) => (i === 0 ? pv / n : (pv * i) / (1 - Math.pow(1 + i, -n)));
+  const pvAnn = (i, n, a) => (i === 0 ? a * n : (a * (1 - Math.pow(1 + i, -n))) / i);
+  const balAfter = (loan, i, a, k) =>
+    Math.max(0, i === 0 ? loan - a * k : loan * Math.pow(1 + i, k) - a * (Math.pow(1 + i, k) - 1) / i);
+
+  function irr(cf) {
+    let lo = -0.95, hi = 3, f = (r) => cf.reduce((s, c, t) => s + c / Math.pow(1 + r, t), 0);
+    if (f(lo) * f(hi) > 0) return NaN;
+    for (let k = 0; k < 200; k++) { const m = (lo + hi) / 2; (f(lo) * f(m) <= 0) ? (hi = m) : (lo = m); }
+    return (lo + hi) / 2;
+  }
+
+  /* ---------- Rechenkern (Blätter 02, 03, 04, 07, 08) ---------- */
+  function calc() {
+    const kp = Math.max(0, S.kp), pgi1 = Math.max(0, S.rent);
+    const vac = S.vac / 100, g = S.growth / 100, gc = P.costGrowth;
+    const sqft = Math.max(0, S.sqft), exitCap = Math.max(0.005, S.exitcap / 100);
+    const N = Math.max(1, Math.min(15, Math.round(S.hold)));
+    const i = S.rate / 100 / P.payPerYear, n = P.termYears * P.payPerYear;
+
+    const opex1 = sqft * S.sc + pgi1 * (1 - vac) * (P.maintenance + P.propMgmt) + P.insurance;
+    const noi1 = pgi1 * (1 - vac) - opex1;
+
+    /* --- Debt Sizing: Doppeltest (Blatt 03) --- */
+    const ltvEff = Math.min(S.ltv / 100, S.ltvCap / 100);
+    const loanLTV = kp * ltvEff;
+    const loanDSCR = noi1 > 0 ? pvAnn(i, n, noi1 / S.dscrMin / P.payPerYear) : 0;
+    let loan = S.ltv <= 0 ? 0 : (S.dscrTest ? Math.min(loanLTV, loanDSCR) : loanLTV);
+    if (!isFinite(loan) || loan < 0) loan = 0;
+    const bind = loan === 0 ? 'keine' : (S.dscrTest && loanDSCR < loanLTV - 1 ? 'DSCR' : 'LTV');
+    const capped = S.ltv / 100 > S.ltvCap / 100 + 1e-9;
+    const A = loan > 0 ? pmt(i, n, loan) : 0;        // monatliche Annuität
+    const dsY = A * P.payPerYear;                    // Kapitaldienst p. a.
+
+    /* --- Gesamtinvestitionskosten (Blatt 02) --- */
+    const nkFix = kp * P.dld + P.dldAdmin + P.trustee * (1 + P.vat) + P.titleDeed + P.noc + kp * P.broker * (1 + P.vat);
+    const nkFin = loan > 0 ? P.valuation + loan * P.mortRegRate + P.mortRegFix + loan * P.bankFee : 0;
+    const nk = nkFix + nkFin, gik = kp + nk, ek = gik - loan;
+
+    /* --- Jahresreihen (Blatt 04) --- */
+    const Y = [], noiArr = [];
+    for (let t = 1; t <= N + 1; t++) {
+      const pgi = pgi1 * Math.pow(1 + g, t - 1);
+      const egi = pgi * (1 - vac);
+      const ox = -(sqft * S.sc * Math.pow(1 + gc, t - 1)) - egi * P.maintenance - egi * P.propMgmt - P.insurance * Math.pow(1 + gc, t - 1);
+      noiArr[t] = egi + ox;
+      if (t <= N) Y.push({ t: t, pgi: pgi, egi: egi, opex: ox, noi: egi + ox });
+    }
+
+    const afaUAE = -(kp * P.buildingShare / P.ndUAE);
+    const afaDE = kp * P.buildingShare * P.afaDE;
+
+    for (let k = 0; k < N; k++) {
+      const y = Y[k], t = y.t;
+      const bs = balAfter(loan, i, A, (t - 1) * P.payPerYear);
+      const be = balAfter(loan, i, A, t * P.payPerYear);
+      y.debtStart = bs; y.debtEnd = be;
+      y.principal = -(bs - be);
+      y.interest = -(dsY - (bs - be));
+      if (loan === 0) { y.principal = 0; y.interest = 0; }
+      y.ds = -dsY;
+      y.dscr = dsY > 0 ? y.noi / dsY : Infinity;
+      y.icr = y.interest < 0 ? y.noi / -y.interest : Infinity;
+      y.value = noiArr[t + 1] / exitCap;
+
+      y.gidl = Math.max(0, -y.interest - Math.max(P.gidlSafeHarbour, P.gidlRatio * y.noi));
+      y.taxUAEbase = y.noi + y.interest + afaUAE + y.gidl;
+      y.uaeCT = S.struktur === 'pv' ? 0 : -Math.max(0, y.taxUAEbase - P.ctAllowance) * P.uaeCT;
+      y.bmgDE = y.noi + y.interest - afaDE;
+
+      if (S.struktur === 'pv') {
+        y.deTax = -Math.max(0, y.bmgDE) * P.estEff;
+      } else if (S.struktur === 'qfzp') {
+        y.hzb = Math.max(0, y.taxUAEbase + y.uaeCT);
+        y.deTax = -Math.max(0, y.hzb * P.estEff + y.uaeCT);
+      } else {
+        y.deTax = -Math.max(0, y.bmgDE * P.kstEff + y.uaeCT);
+      }
+      y.cfPre = y.noi + y.ds;
+      y.cfUAE = y.cfPre + y.uaeCT;
+      y.cfAll = y.cfUAE + y.deTax;
+    }
+
+    /* --- Exit (Blatt 04, Zeilen 47-50) --- */
+    const last = Y[N - 1];
+    const gross = last.value, sellCost = -gross * P.sellingCosts, repay = -last.debtEnd;
+    const bvUAE = kp - (kp * P.buildingShare / P.ndUAE) * N;
+    const bvDE = gik - afaDE * N;
+    const gainUAE = gross + sellCost - bvUAE;
+    const gainDE = gross + sellCost - bvDE;
+    const exitCT = S.struktur === 'pv' ? 0 : -Math.max(0, gainUAE) * P.uaeCT;
+    let exitDE = 0;
+    if (S.struktur === 'pv') exitDE = N <= 10 ? -Math.max(0, gainDE) * P.estEff : 0;
+    else if (S.struktur === 'qfzp') exitDE = -Math.max(0, Math.max(0, gainUAE + exitCT) * P.estEff + exitCT);
+    else exitDE = -Math.max(0, gainDE * P.kstEff + exitCT);
+    const exitNet = gross + sellCost + repay + exitCT + exitDE;
+
+    /* --- Renditen --- */
+    const cfLev = [-ek]; const cfUnlev = [-gik];
+    for (let k = 0; k < N; k++) {
+      cfLev.push(Y[k].cfAll + (k === N - 1 ? exitNet : 0));
+      cfUnlev.push(Y[k].noi + (k === N - 1 ? gross + sellCost : 0));
+    }
+    const inflows = cfLev.slice(1).reduce((a, b) => a + b, 0);
+
+    const y1 = Y[0];
+    return {
+      N: N, kp: kp, pgi1: pgi1, noi1: y1.noi, gik: gik, nk: nk, ek: ek, loan: loan, bind: bind, capped: capped,
+      annuity: A, dsY: dsY, years: Y, afaDE: afaDE, afaUAE: afaUAE,
+      capGIK: gik > 0 ? y1.noi / gik : 0, capKP: kp > 0 ? y1.noi / kp : 0, gross: kp > 0 ? pgi1 / kp : 0,
+      cocPre: ek > 0 ? y1.cfPre / ek : 0, cocUAE: ek > 0 ? y1.cfUAE / ek : 0, cocAll: ek > 0 ? y1.cfAll / ek : 0,
+      dscr1: y1.dscr, dscrMin: Math.min.apply(null, Y.map((y) => y.dscr)), icr1: y1.icr,
+      ltvEff: kp > 0 ? loan / kp : 0, ltc: gik > 0 ? loan / gik : 0,
+      irrLev: irr(cfLev), irrUnlev: irr(cfUnlev), mom: ek > 0 ? inflows / ek : 0,
+      breakeven: y1.pgi > 0 ? (-y1.opex + dsY) / y1.pgi : 0,
+      exit: { gross: gross, sellCost: sellCost, repay: repay, ct: exitCT, de: exitDE, net: exitNet, gainDE: gainDE, gainUAE: gainUAE },
+      taxY1: { uae: y1.uaeCT, de: y1.deTax, base: y1.taxUAEbase, bmgDE: y1.bmgDE, hzb: y1.hzb || 0, quote: y1.noi > 0 ? (-y1.uaeCT - y1.deTax) / y1.noi : 0 }
+    };
+  }
+
+  /* ---------- Formatierung ---------- */
+  const nf = (d) => new Intl.NumberFormat('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const z0 = (v) => (Object.is(v, -0) || Math.abs(v) < 5e-9 ? 0 : v);
+  const cv = (v) => z0(CUR === 'EUR' ? v / P.fx : v);
+  const money = (v, d) => (isFinite(v) ? nf(d === undefined ? 0 : d).format(cv(v)) + ' ' + CUR : '–');
+  const num = (v, d) => (isFinite(v) ? nf(d === undefined ? 2 : d).format(z0(v)) : '–');
+  const pct = (v, d) => (isFinite(v) ? nf(d === undefined ? 1 : d).format(v * 100) + ' %' : '–');
+  const pp = (v, d) => (isFinite(v) ? nf(d === undefined ? 1 : d).format(v * 100) + ' pp' : '–');
+  const short = (v) => {
+    const x = cv(v), a = Math.abs(x);
+    if (a >= 1e6) return nf(a >= 1e7 ? 0 : 1).format(x / 1e6) + ' Mio.';
+    if (a >= 1e3) return nf(0).format(x / 1e3) + ' Tsd.';
+    return nf(0).format(x);
+  };
+
+  const NOTES = {
+    pv: 'Direct acquisition by a person subject to unlimited tax liability in Germany. No corporate tax arises in the UAE (Cabinet Decision 49/2023); Germany taxes the rental income under § 21 EStG, as no exemption applies.',
+    qfzp: 'Free Zone company. Residential property regularly does not constitute Qualifying Income (Cabinet Decision 100/2023) - 9 % corporate tax applies. In addition, CFC taxation under §§ 7 et seq. AStG applies at the level of the German shareholder.',
+    gmbh: 'German corporation with a permanent establishment in the UAE. In the UAE 9 % corporate tax via the nexus (Cabinet Decision 56/2023), in Germany 15.825 % corporate income tax with credit under § 26 KStG; trade tax is eliminated under § 9 no. 3 GewStG.'
+  };
+  const LEGAL = {
+    pv: 'Legal consequence: the UAE rents are foreign income under § 34d no. 7 EStG. Because the double taxation agreement has not applied since 1 January 2022, exemption falls away; a credit under § 34c EStG runs empty for want of UAE tax. Interest expense and building depreciation under § 7(4) EStG reduce the tax base. A sale within the ten-year period of § 23 EStG is fully taxable.',
+    qfzp: 'Legal consequence: control, passive income (§ 8(1) no. 6 lit. b AStG - the counter-exception fails for want of an agreement) and low taxation (9 % < 15 %, § 8(5) AStG) are present; the substance test of § 8(2) AStG is not available for third countries. The CFC inclusion is captured at shareholder level under §§ 7, 10 AStG, the UAE tax credited under § 12 AStG. The Free Zone structure therefore does not shift the taxation, it merely adds the cost of the company.',
+    gmbh: 'Legal consequence: the permanent establishment income is subject to corporate income tax plus solidarity surcharge (15.825 %); for trade tax purposes it is reduced under § 9 no. 3 GewStG. The UAE tax is credited under § 26 KStG in conjunction with § 34c EStG up to the amount of German tax attributable to it. A later distribution to a natural person additionally triggers flat-rate withholding tax or the partial income procedure - the figures here reflect the company level only.'
+  };
+
+  /* ---------- Diagramm (5-Jahres-Verlauf) ---------- */
+  function chart(R) {
+    const dark = root.classList.contains('dark');
+    const cNOI = '#10b981', cDS = dark ? '#94a3b8' : '#1B3A69', cCF = dark ? '#38bdf8' : '#0ea5e9';
+    const cGrid = dark ? 'rgba(255,255,255,.10)' : 'rgba(15,23,42,.10)';
+    const cTxt = dark ? '#94a3b8' : '#64748b';
+    const W = 760, H = 236, padL = 46, padR = 10, padT = 14, padB = 30;
+    const yrs = R.years.slice(0, 5);
+    const series = yrs.map((y) => [y.noi, y.ds, y.cfAll]);
+    let hi = 0, lo = 0;
+    series.forEach((s) => s.forEach((v) => { if (v > hi) hi = v; if (v < lo) lo = v; }));
+    if (hi === 0 && lo === 0) hi = 1;
+    const span = (hi - lo) || 1, headroom = span * 0.10;
+    const top = hi + headroom, bot = lo - headroom;
+    const iw = W - padL - padR, ih = H - padT - padB;
+    const yOf = (v) => padT + ih * (top - v) / (top - bot);
+    const zero = yOf(0);
+    const gw = iw / yrs.length, bw = Math.min(26, gw * 0.20), gap = bw * 0.28;
+
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Cash flow, years 1 to 5" style="width:100%;height:auto;max-height:280px">';
+    [hi, lo].forEach(function (v) {
+      if (Math.abs(yOf(v) - zero) < 14) return;
+      s += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + yOf(v).toFixed(1) + '" y2="' + yOf(v).toFixed(1) + '" stroke="' + cGrid + '" stroke-width="1" stroke-dasharray="3 4"/>';
+      s += '<text x="' + (padL - 7) + '" y="' + (yOf(v) + 3.5).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + cTxt + '" font-family="Inter,sans-serif">' + short(v) + '</text>';
+    });
+    s += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + zero.toFixed(1) + '" y2="' + zero.toFixed(1) + '" stroke="' + (dark ? 'rgba(255,255,255,.30)' : 'rgba(15,23,42,.30)') + '" stroke-width="1.2"/>';
+    s += '<text x="' + (padL - 7) + '" y="' + (zero + 3.5).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + cTxt + '" font-family="Inter,sans-serif">0</text>';
+
+    yrs.forEach(function (y, k) {
+      const cx = padL + gw * k + gw / 2;
+      const vals = [[y.noi, cNOI, 'NOI'], [y.ds, cDS, 'Debt service'], [y.cfAll, cCF, 'Cash flow after tax']];
+      vals.forEach(function (d, j) {
+        const v = d[0], x = cx + (j - 1) * (bw + gap) - bw / 2;
+        const yTop = v >= 0 ? yOf(v) : zero, h = Math.max(1.5, Math.abs(yOf(v) - zero));
+        s += '<rect x="' + x.toFixed(1) + '" y="' + yTop.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2.5" fill="' + d[1] + '" opacity="' + (v < 0 ? 0.78 : 0.95) + '">'
+          + '<title>Jahr ' + y.t + ' · ' + d[2] + ': ' + money(v) + '</title></rect>';
+      });
+      s += '<text x="' + cx.toFixed(1) + '" y="' + (H - 9) + '" text-anchor="middle" font-size="10.5" fill="' + cTxt + '" font-family="Inter,sans-serif" font-weight="600">Jahr ' + y.t + '</text>';
+    });
+    s += '</svg>';
+    $('chart').innerHTML = s;
+  }
+
+  /* ---------- Ausgabe ---------- */
+  function render() {
+    const R = calc();
+
+    /* Eingabe-Randnotizen */
+    $('o-grossyield').textContent = 'Gross yield ' + pct(R.gross);
+    $('o-eqratio').textContent = num(Math.max(0, 100 - R.ltvEff * 100), 0) + ' %';
+    $('o-ltvnote').innerHTML = R.loan === 0
+      ? '<span class="text-slate-400">unbelastet</span>'
+      : (R.bind === 'DSCR'
+        ? '<span class="text-amber-600 dark:text-amber-400">DSCR begrenzt auf ' + num(R.ltvEff * 100, 0) + ' %</span>'
+        : (R.capped ? '<span class="text-amber-600 dark:text-amber-400">reg. Grenze ' + num(S.ltvCap, 0) + ' %</span>'
+          : '<span class="text-emerald-600 dark:text-emerald-400">LTV bindet</span>'));
+    $('o-annuity').textContent = R.annuity > 0 ? money(R.annuity) + '/Monat' : '–';
+    $('o-strukturnote').textContent = NOTES[S.struktur];
+
+    /* KPI-Karten */
+    $('k-noi').textContent = money(R.noi1);
+    $('k-noi-s1').textContent = pct(R.capGIK, 2);
+    $('k-noi-s2').textContent = pct(R.gross, 2);
+
+    $('k-coc').textContent = pct(R.cocAll, 2);
+    $('k-coc').className = KPICLS + ' ' + (R.cocAll < 0 ? 'text-rose-600 dark:text-rose-400' : '');
+    $('k-coc-s1').textContent = pct(R.cocPre, 2);
+    $('k-coc-s2').textContent = money(R.ek);
+
+    const okD = R.dscr1 >= S.dscrMin - 1e-9;
+    $('k-dscr').textContent = isFinite(R.dscr1) ? num(R.dscr1) + 'x' : 'unlevered';
+    $('k-dscr').className = KPICLS + ' ' + (isFinite(R.dscr1) && !okD ? 'text-rose-600 dark:text-rose-400' : '');
+    $('k-dscr-bar').className = 'absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ' + (isFinite(R.dscr1) && !okD ? 'from-rose-400 to-rose-600' : 'from-emerald-400 to-emerald-600');
+    $('k-dscr-s1').textContent = isFinite(R.dscrMin) ? num(R.dscrMin) + 'x' : '–';
+    $('k-dscr-s2').textContent = isFinite(R.icr1) ? num(R.icr1) + 'x' : '–';
+
+    $('k-ret-de').textContent = pct(R.cocAll, 2);
+    $('k-ret-de').className = KPICLS + ' ' + (R.cocAll < 0 ? 'text-rose-600 dark:text-rose-400' : '');
+    $('k-ret-ae').textContent = pct(R.cocUAE, 2);
+    const gap = R.cocUAE - R.cocAll;
+    $('k-ret-gap').textContent = (gap > 0 ? '−' : '') + pp(Math.abs(gap), 2);
+
+    /* Steuerbrücke */
+    const row = (l, v, cls) => '<li class="flex items-baseline justify-between gap-3"><span class="text-slate-500 dark:text-slate-400">' + l + '</span><span class="tnum shrink-0 font-semibold ' + (cls || '') + '">' + v + '</span></li>';
+    const y1 = R.years[0];
+    $('t-uae').innerHTML =
+      row('NOI year 1', money(y1.noi)) +
+      row('Interest expense', money(y1.interest)) +
+      row('Building depreciation 80 % / 40 yrs', money(R.afaUAE)) +
+      (y1.gidl > 0 ? row('Interest limitation, non-deductible', money(y1.gidl), 'text-amber-600 dark:text-amber-400') : '') +
+      row('= Bemessungsgrundlage', money(R.taxY1.base), 'text-slate-900 dark:text-white') +
+      row('Corporate Tax 9 %', money(R.taxY1.uae), R.taxY1.uae < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400');
+    $('t-de').innerHTML = (S.struktur === 'qfzp'
+      ? row('CFC inclusion § 7 AStG', money(R.taxY1.hzb)) +
+        row('Tax at 47.475 % thereon', money(-R.taxY1.hzb * P.estEff)) +
+        row('./. Anrechnung § 12 AStG', money(-R.taxY1.uae), 'text-emerald-600 dark:text-emerald-400')
+      : row('German tax base', money(R.taxY1.bmgDE)) +
+        row(S.struktur === 'pv' ? 'Marginal income tax incl. solidarity surcharge' : 'Corporate tax incl. surcharge, trade tax reduced', S.struktur === 'pv' ? '47,475 %' : '15,825 %') +
+        (S.struktur === 'gmbh' ? row('./. Anrechnung § 26 KStG', money(-R.taxY1.uae), 'text-emerald-600 dark:text-emerald-400') : '')) +
+      row('= deutsche Steuer', money(R.taxY1.de), R.taxY1.de < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400');
+    $('t-sum').innerHTML =
+      row('Cash flow before tax', money(y1.cfPre)) +
+      row('nach VAE-Steuer', money(y1.cfUAE)) +
+      row('nach deutscher Steuer', money(y1.cfAll), 'text-slate-900 dark:text-white') +
+      row('Tax rate on NOI', pct(R.taxY1.quote, 1)) +
+      row('Tax per 100k NOI', money(R.taxY1.quote * 100000));
+    $('t-legal').textContent = LEGAL[S.struktur];
+
+    /* Tabelle */
+    const cells = (f, cls) => R.years.slice(0, 5).map((y) => '<td class="px-1 py-1.5 text-right ' + (cls || '') + '">' + f(y) + '</td>').join('');
+    const tr = (l, f, cls, strong) =>
+      '<tr class="border-b border-slate-100 dark:border-white/5' + (strong ? ' font-semibold' : '') + '"><td class="px-1 py-1.5 ' + (strong ? 'font-semibold' : 'text-slate-500 dark:text-slate-400') + '">' + l + '</td>' + cells(f, cls) + '</tr>';
+    $('cf-table').innerHTML =
+      tr('Potential rent (PGI)', (y) => money(y.pgi)) +
+      tr('Operating costs', (y) => money(y.opex)) +
+      tr('Net Operating Income', (y) => money(y.noi), '', true) +
+      tr('Debt service', (y) => money(y.ds)) +
+      tr('of which interest / principal', (y) => money(y.interest) + ' / ' + money(y.principal), 'text-[11.5px] text-slate-400') +
+      tr('Tax UAE', (y) => money(y.uaeCT)) +
+      tr('Tax Germany', (y) => money(y.deTax)) +
+      tr('Cash flow after all taxes', (y) => money(y.cfAll), '', true) +
+      tr('DSCR', (y) => (isFinite(y.dscr) ? num(y.dscr) + 'x' : '–')) +
+      tr('Loan balance, year end', (y) => money(y.debtEnd));
+
+    /* Kennzahlenleiste */
+    const mini = [
+      ['Total investment', money(R.gik), 'Costs ' + pct(R.kp > 0 ? R.nk / R.kp : 0, 1)],
+      ['Equity', money(R.ek), 'LTC ' + pct(R.ltc, 0)],
+      ['Loan', money(R.loan), 'eff. LTV ' + pct(R.ltvEff, 0)],
+      ['IRR after tax', pct(R.irrLev, 1), R.N + ' Jahre, gehebelt'],
+      ['Capital return', isFinite(R.mom) ? num(R.mom) + 'x' : '–', 'Multiple on equity'],
+      ['Break-even occupancy', pct(R.breakeven, 0), 'Stress threshold']
+    ].map((m) =>
+      '<div class="rounded-xl border border-slate-200 bg-white px-3.5 py-3 dark:border-white/10 dark:bg-navy-900">'
+      + '<div class="text-[10.5px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">' + m[0] + '</div>'
+      + '<div class="tnum mt-1 text-[16px] font-bold leading-tight">' + m[1] + '</div>'
+      + '<div class="mt-0.5 text-[11px] text-slate-400">' + m[2] + '</div></div>').join('');
+    $('mini').innerHTML = mini;
+
+    chart(R);
+  }
+
+  /* ---------- Bedienung ---------- */
+  const trackFill = (el) => {
+    const min = +el.min, max = +el.max;
+    el.style.setProperty('--p', (((+el.value - min) / (max - min)) * 100).toFixed(2) + '%');
+  };
+
+  const parseDE = (t) => parseFloat(String(t).replace(/[^0-9,.\-]/g, '').replace(/\./g, '').replace(',', '.'));
+
+  function bindPair(sliderId, inputId, key, dec, fmt) {
+    const sl = $(sliderId), inp = $(inputId);
+    const show = (v) => (fmt ? nf(0).format(Math.round(cv(v))) : (dec ? +v.toFixed(dec) : v));
+    const read = () => (fmt ? parseDE(inp.value) * (CUR === 'EUR' ? P.fx : 1) : +inp.value);
+    const push = (v, from) => {
+      v = isFinite(v) ? v : DEFAULTS[key];
+      S[key] = v;
+      if (from !== 'slider') sl.value = Math.min(+sl.max, Math.max(+sl.min, v));
+      if (from !== 'input') inp.value = show(v);
+      trackFill(sl);
+      if (key === 'rent' && !sqftTouched) { S.sqft = Math.max(1, Math.round(v / P.rentPerSqft)); $('a-sqft').value = S.sqft; }
+      render();
+    };
+    sl.addEventListener('input', () => push(+sl.value, 'slider'));
+    inp.addEventListener('input', () => { const v = read(); if (inp.value !== '' && isFinite(v)) push(v, 'input'); });
+    inp.addEventListener('focus', () => { if (fmt) inp.value = Math.round(cv(S[key])); });
+    inp.addEventListener('blur', () => push(read() || DEFAULTS[key], 'blur'));
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
+    push(S[key], 'init');
+    return push;
+  }
+
+  function bindAdv(id, key, dec) {
+    const el = $(id);
+    el.value = dec ? +S[key].toFixed(dec) : S[key];
+    el.addEventListener('input', () => {
+      if (el.value === '' || !isFinite(+el.value)) return;
+      S[key] = +el.value; if (id === 'a-sqft') sqftTouched = true; render();
+    });
+  }
+
+  const pushKp = bindPair('s-kp', 'i-kp', 'kp', 0, true);
+  const pushRent = bindPair('s-rent', 'i-rent', 'rent', 0, true);
+  bindPair('s-ltv', 'i-ltv', 'ltv');
+  bindPair('s-rate', 'i-rate', 'rate', 2);
+  ['a-sqft:sqft', 'a-vac:vac', 'a-sc:sc', 'a-growth:growth', 'a-exitcap:exitcap', 'a-hold:hold', 'a-dscr:dscrMin', 'a-ltvcap:ltvCap']
+    .forEach((s) => { const p = s.split(':'); bindAdv(p[0], p[1], 2); });
+  $('a-dscrtest').checked = S.dscrTest;
+  $('a-dscrtest').addEventListener('change', (e) => { S.dscrTest = e.target.checked; render(); });
+  $('i-struktur').addEventListener('change', (e) => { S.struktur = e.target.value; render(); });
+  $('a-reset').addEventListener('click', () => {
+    Object.assign(S, DEFAULTS); sqftTouched = false;
+    $('i-struktur').value = S.struktur; $('a-dscrtest').checked = S.dscrTest;
+    [['s-ltv', 'i-ltv', 'ltv'], ['s-rate', 'i-rate', 'rate']]
+      .forEach((p) => { $(p[0]).value = S[p[2]]; $(p[1]).value = S[p[2]]; trackFill($(p[0])); });
+    pushKp(DEFAULTS.kp, 'reset'); pushRent(DEFAULTS.rent, 'reset');
+    ['a-sqft:sqft', 'a-vac:vac', 'a-sc:sc', 'a-growth:growth', 'a-exitcap:exitcap', 'a-hold:hold', 'a-dscr:dscrMin', 'a-ltvcap:ltvCap']
+      .forEach((s) => { const p = s.split(':'); $(p[0]).value = S[p[1]]; });
+    render();
+  });
+
+  /* Währungsumschalter */
+  function setCur(c) {
+    CUR = c;
+    Array.prototype.forEach.call(document.querySelectorAll('#dxb-widget .dxb-unit'), function (u) { u.textContent = c; });
+    if (typeof pushKp === 'function') { pushKp(S.kp, 'cur'); pushRent(S.rent, 'cur'); }
+    Array.prototype.forEach.call(document.querySelectorAll('#dxb-widget .dxb-cur'), function (b) {
+      const on = b.dataset.cur === c;
+      b.className = 'dxb-cur rounded-lg px-3 py-1.5 text-[13px] font-semibold transition '
+        + (on ? 'bg-emerald-500 text-navy-950 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100');
+    });
+    render();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#dxb-widget .dxb-cur'), function (b) {
+    b.addEventListener('click', function () { setCur(b.dataset.cur); });
+  });
+
+  /* Dark Mode: folgt einem data-theme der Website, sonst der Systemeinstellung,
+     und ist in beiden Fällen per Schalter überstimmbar. */
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  const hostTheme = function () {
+    const d = document.documentElement.getAttribute('data-theme')
+      || (document.body && document.body.getAttribute('data-theme'))
+      || (document.documentElement.classList.contains('dark') ? 'dark' : '');
+    return d === 'dark' ? true : (d === 'light' ? false : null);
+  };
+  const setTheme = (d) => { root.classList.toggle('dark', d); render(); };
+  const followHost = function () { if (!root.dataset.manual) { const h = hostTheme(); setTheme(h === null ? mq.matches : h); } };
+  followHost();
+  if (mq.addEventListener) mq.addEventListener('change', followHost);
+  if (window.MutationObserver) {
+    const mo = new MutationObserver(followHost);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+  $('dxb-theme').addEventListener('click', function () { root.dataset.manual = '1'; setTheme(!root.classList.contains('dark')); });
+
+  /* Call-to-Action */
+  const cta = $('cta');
+  /* CTA wiring: see BLACK PEARL integration layer at the end of this file. */
+  setCur('AED');
+})();
+</script>
+<script>
+/* BLACK PEARL integration layer.
+   Deliberately separated from the calculation engine above: this block contains no
+   calculation, no tax logic and no formula. It only bridges to the embedding Framer
+   window (height + CTA intent). Removable without breaking the module. */
+(function(){
+  var TOOL='real-estate-returns';
+  function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
+  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+  var cta=document.getElementById('cta');
+  if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
+  window.addEventListener('load',height);
+  window.addEventListener('resize',height);
+  document.addEventListener('input',height);
+  document.addEventListener('change',height);
+  height();
+})();
+</script>
+</body></html>

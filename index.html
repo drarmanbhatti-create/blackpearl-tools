@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Analytical Tools — BLACK PEARL</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F0EA; --panel:#FCFBF8; --ink:#161616; --muted:#8E8B86; --rule:#DCD8D0;
+  --dark:#0B0B0B; --light:#F4F1EB; --accent:#2E4A43;
+  --serif:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:56px 24px 72px}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.12;margin:0 0 14px;letter-spacing:-.01em}
+.lead{max-width:62ch;color:var(--muted);margin:0 0 40px}
+.note{border:1px solid var(--rule);background:var(--panel);border-radius:2px;padding:16px 18px;margin:0 0 40px;font-size:13.5px;color:#57544E}
+.note b{color:var(--ink)}
+.list{border-top:1px solid var(--rule)}
+.item{display:block;text-decoration:none;color:inherit;border-bottom:1px solid var(--rule);padding:22px 2px;transition:background .15s}
+.item:hover{background:var(--panel)}
+.route{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.name{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 6px}
+.desc{margin:0;font-size:13.5px;color:#57544E;max-width:66ch}
+.foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted);max-width:74ch}
+.foot p{margin:0 0 8px}
+</style></head><body>
+<div class="wrap">
+  <p class="eyebrow">BLACK PEARL · Analytical Tools</p>
+  <h1>Analytical tools</h1>
+  <p class="lead">Four self-contained calculation modules prepared for embedding into the BLACK PEARL website. Each module runs standalone, without a build step and without external scripts.</p>
+
+  <div class="note">
+    <b>Working state — not published.</b> This page exists so the modules have a stable
+    address for embedding. Content, legal positions and terminology have not yet been
+    reviewed by the owner. Nothing here is approved for public use.
+  </div>
+
+  <div class="list">
+    <a class="item" href="uae-corporate-tax.html">
+      <p class="route">/tools/uae-corporate-tax</p>
+      <p class="name">UAE Corporate Tax</p>
+      <p class="desc">Four holding structures under one tax regime, scaled from a single property to portfolio size. Includes the interest deduction limitation and Small Business Relief.</p>
+    </a>
+    <a class="item" href="german-tax-layer.html">
+      <p class="route">/tools/german-tax-layer</p>
+      <p class="name">German Tax Layer</p>
+      <p class="desc">Ongoing taxation of four structures without a double taxation agreement, plus § 23 EStG, § 6 AStG exit taxation, the CFC test cascade and § 2a EStG.</p>
+    </a>
+    <a class="item" href="real-estate-returns.html">
+      <p class="route">/tools/real-estate-returns</p>
+      <p class="name">Real Estate Returns</p>
+      <p class="desc">NOI, cash-on-cash, DSCR and after-tax return, with a year-one tax bridge between the UAE and German levels and a five-year cash flow.</p>
+    </a>
+    <a class="item" href="development-off-plan.html">
+      <p class="route">/tools/development-off-plan</p>
+      <p class="name">Development &amp; Off-Plan</p>
+      <p class="desc">Development spread against the exit cap rate, cost and capital build-up, profit on cost, and the split between investors and sponsor.</p>
+    </a>
+  </div>
+
+  <div class="foot">
+    <p><b>Embedding.</b> Each module reports its height to the embedding window via
+      <code>postMessage</code> as <code>{ type:'bp-tool-height', tool:&lt;name&gt;, height:&lt;px&gt; }</code>,
+      and reports a booking intent as <code>{ type:'bp-tool-cta', tool:&lt;name&gt;, action:'book-consultation' }</code>.
+      The booking flow itself is not wired up; the button is inert until a provider is chosen.</p>
+    <p><b>Review required before publication.</b> Legal positions, statutory citations, the
+      English rendering of German tax terminology and all model assumptions are carried over
+      from the source modules and have not been verified.</p>
+  </div>
+</div>
+</body></html>

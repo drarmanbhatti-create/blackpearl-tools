@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>German Tax Layer — BLACK PEARL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>:root{
+  /* BLACK PEARL tokens (Master Specification v3, §2.3) */
+  --paper:#F3F0EA; --panel:#FCFBF8; --ink:#161616; --muted:#8E8B86; --rule:#DCD8D0;
+  /* Status colours: muted editorial tones, no gold, no signal green */
+  --teal:#2E4A43; --teal-soft:#E8EDEA; --amber:#6B5426; --amber-soft:#F2EDE2; --red:#6E2F2F; --red-soft:#F1E6E4;
+  --focus:#161616;
+  --serif:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+svg{display:block;overflow:hidden;max-width:100%;height:auto}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:32px 20px 48px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.12;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:400;font-size:23px;margin:0 0 4px}
+h3{font-size:14px;font-weight:600;margin:0 0 10px;color:var(--ink)}
+p.lead{max-width:68ch;color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:28px;align-items:start}
+.grid>*{min-width:0}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.inputs{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:6px 18px 16px;position:sticky;top:12px}
+@media (max-width:900px){.inputs{position:static}}
+details{border-bottom:1px solid var(--rule);padding:10px 0}
+details:last-of-type{border-bottom:0}
+summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+summary::-webkit-details-marker{display:none}
+.field{margin:10px 0 4px}
+.field label{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:4px;gap:2px 8px;min-width:0}
+.field label span:first-child,.field label>*:first-child{min-width:0}
+.field label output{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.field input[type=range]{width:100%;accent-color:var(--teal)}
+.field input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--rule);border-radius:4px;font:inherit;font-variant-numeric:tabular-nums;background:#fff;color:var(--ink)}
+.hint{font-size:12px;color:var(--muted);margin-top:2px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.toolbar{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+button.reset{border:1px solid var(--rule);background:#fff;border-radius:4px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:18px 20px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border-top:1px solid var(--rule)}
+.kpi{padding:12px 14px 12px 0;border-bottom:1px solid var(--rule)}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.kpi .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.verdict{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:4px;font-size:13.5px;margin-top:12px}
+.verdict.ok{background:var(--teal-soft);color:#0B4F4D}
+.verdict.warn{background:var(--amber-soft);color:#7A3A06}
+.verdict.bad{background:var(--red-soft);color:#7C1C21}
+.verdict b{white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+th,td{padding:7px 9px;text-align:right;font-size:13px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:600;color:var(--muted)}
+td:first-child,th:first-child{text-align:left}
+tr.sum td{font-weight:600;border-top:1px solid var(--ink)}
+.neg{color:var(--red)}
+.foot{font-size:12.5px;color:var(--muted);max-width:90ch}
+.foot p{margin:0 0 8px}
+.cta{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:#0B0B0B;color:#F4F1EB;border-radius:2px;padding:22px 24px;margin:22px 0}
+.cta p{margin:0;max-width:62ch;color:#C9C5BD;font-size:14px}
+.cta-links{display:flex;gap:10px;flex-wrap:wrap}
+.cta-button{background:#F4F1EB;color:#161616;border:0;font:inherit;font-weight:600;padding:10px 16px;border-radius:2px;font-size:14px;white-space:nowrap;cursor:pointer}
+.cta-button:hover{background:#fff}
+@media (prefers-reduced-motion:no-preference){.bar{transition:height .25s ease,y .25s ease}}
+ol.cascade{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px}
+ol.cascade li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:4px;background:var(--teal-soft);font-size:13.5px}
+ol.cascade li.no{background:var(--red-soft)}
+ol.cascade .n{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:600}
+ol.cascade li.no .n{background:var(--red)}
+</style></head><body><div class="wrap">
+  <h1>The German Tax Layer Without a Double Taxation Agreement</h1>
+  <p class="lead">The Germany–UAE double taxation agreement expired on 31 December 2021 and no successor agreement is in place. What remains is unilateral credit relief under § 34c EStG and § 26 KStG respectively, not exemption. What this means for four typical structures, and what additionally applies on exit, on departure and under the CFC rules.</p>
+
+  <div class="grid">
+    <form class="inputs" id="f" onsubmit="return false" aria-label="Assumptions">
+      <details open><summary>Property and portfolio</summary>
+        <div class="field"><label for="P">Purchase price (AED) <output id="o_P"></output></label><input type="range" id="P" min="500000" max="15000000" step="50000"></div>
+        <div class="field"><label for="A">Area (sqft) <output id="o_A"></output></label><input type="range" id="A" min="300" max="6000" step="25"></div>
+        <div class="field"><label for="PGI">Annual rent at full occupancy (AED) <output id="o_PGI"></output></label><input type="range" id="PGI" min="30000" max="1200000" step="1000"></div>
+        <div class="field"><label for="v">Vacancy <output id="o_v"></output></label><input type="range" id="v" min="0" max="0.25" step="0.01"></div>
+        <div class="field"><label for="SC">Service Charge (AED/sqft) <output id="o_SC"></output></label><input type="range" id="SC" min="8" max="40" step="0.5"></div>
+        <div class="field"><label for="N">Portfolio factor <output id="o_N"></output></label><input type="range" id="N" min="1" max="100" step="1"></div>
+      </details>
+      <details><summary>Financing</summary>
+        <div class="field"><label for="LTV">Target leverage (LTV) <output id="o_LTV"></output></label><input type="range" id="LTV" min="0" max="0.75" step="0.05"></div>
+        <div class="field"><label for="rate">Interest rate p.a. <output id="o_rate"></output></label><input type="range" id="rate" min="0.025" max="0.08" step="0.0025"></div>
+        <div class="field"><label for="n">Term (years) <output id="o_n"></output></label><input type="range" id="n" min="10" max="25" step="1"></div>
+        <div class="field"><label for="dmin">Minimum DSCR <output id="o_dmin"></output></label><input type="range" id="dmin" min="1" max="1.6" step="0.05"></div>
+      </details>
+      <details><summary>Exit (§ 23 EStG)</summary>
+        <div class="field"><label for="cap">Exit cap rate <output id="o_cap"></output></label><input type="range" id="cap" min="0.035" max="0.09" step="0.0025"></div>
+        <div class="field"><label for="sell">Selling costs <output id="o_sell"></output></label><input type="range" id="sell" min="0" max="0.05" step="0.0025"></div>
+        <div class="field"><label for="g">Rent growth p.a. <output id="o_g"></output></label><input type="range" id="g" min="-0.02" max="0.06" step="0.0025"></div>
+        <div class="field"><label for="T">Holding period (years) <output id="o_T"></output></label><input type="range" id="T" min="1" max="15" step="1"></div>
+      </details>
+      <details><summary>Personal tax data</summary>
+        <div class="field"><label for="GS">Marginal income tax rate <output id="o_GS"></output></label><input type="range" id="GS" min="0.14" max="0.45" step="0.01"></div>
+        <div class="field"><label for="beteiligung">Shareholding in UAE company <output id="o_beteiligung"></output></label><input type="range" id="beteiligung" min="0.1" max="1" step="0.05"></div>
+      </details>
+      <details><summary>§ 6 AStG exit taxation</summary>
+        <div class="field"><label for="gw">Fair market value of the shareholding (EUR) <output id="o_gw"></output></label><input type="range" id="gw" min="100000" max="20000000" step="50000"></div>
+        <div class="field"><label for="ak">Acquisition cost (EUR) <output id="o_ak"></output></label><input type="range" id="ak" min="1000" max="1000000" step="1000"></div>
+        <div class="field"><label for="raten">Number of annual instalments <output id="o_raten"></output></label><input type="range" id="raten" min="1" max="7" step="1"></div>
+        <div class="field"><label for="Ke">Discount rate for present value <output id="o_Ke"></output></label><input type="range" id="Ke" min="0.03" max="0.18" step="0.0005"></div>
+      </details>
+    </form>
+
+    <main>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="AED" aria-pressed="true">AED</button><button type="button" data-cur="EUR" aria-pressed="false">EUR</button></div>
+        <button type="button" class="reset" id="reset">Reset to model values</button>
+      </div>
+
+      <section class="card" aria-labelledby="h-a">
+        <h2 id="h-a">A. Four structures compared — ongoing taxation, year 1</h2>
+        <div class="scroll"><table id="t_a"></table></div>
+        <div id="v_a"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-b">
+        <h2 id="h-b">B. § 23 EStG — capital gain on privately held property</h2>
+        <svg id="frist" viewBox="0 0 700 70" width="100%" role="img" aria-label="Ten-year period"></svg>
+        <div class="kpis" id="k_b"></div>
+        <div id="v_b"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-c">
+        <h2 id="h-c">C. § 6 AStG — exit taxation</h2>
+        <div class="kpis" id="k_c"></div>
+        <div id="v_c"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-d">
+        <h2 id="h-d">D. §§ 7 et seq. AStG — CFC taxation: test cascade</h2>
+        <ol class="cascade" id="cascade"></ol>
+        <div class="kpis" id="k_d"></div>
+        <div id="v_d"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-e">
+        <h2 id="h-e">E. § 2 AStG — extended limited tax liability</h2>
+        <p class="foot" style="margin:0">Applies only to non-foreign income of a German national who was subject to unlimited tax liability for at least five of the last ten years and moves to a low-tax country (§ 2(1), (2) AStG). The UAE levies no income tax, so this criterion is met. The decisive point: <b>only non-foreign income within the meaning of § 34d EStG is captured.</b> Dubai rental income is foreign income under § 34d no. 7 EStG and therefore falls outside the scope; § 2 AStG reaches the German assets left behind, not the new Emirati ones. Exemption limit EUR 16,500 (§ 2(1) sentence 3 AStG), applicable for ten years after unlimited tax liability ends.</p>
+      </section>
+
+      <section class="card" aria-labelledby="h-f">
+        <h2 id="h-f">F. § 2a EStG — restriction on loss offsetting</h2>
+        <div class="kpis" id="k_f"></div>
+        <div id="v_f"></div>
+      </section>
+
+      <!-- TODO (Master Specification v3, §10): booking provider not yet selected.
+           This button does NOT trigger a booking. It reports the intent via postMessage to the
+           embedding window; the unified booking flow is wired up there in Framer.
+           Message: { type:'bp-tool-cta', tool:'german-tax-layer', action:'book-consultation' } -->
+      <div class="cta">
+        <p>Four structures, five sets of provisions, one question: which combination fits your case, your length of stay and your intention to return? That is decided by details no calculator knows.</p>
+        <div class="cta-links">
+          <button type="button" class="cta-button" id="bp-cta">Book a Consultation</button>
+        </div>
+      </div>
+
+      <div class="foot">
+        <p><b>Legal position.</b> Germany–UAE double taxation agreement of 1 July 2010, expired on 31 December 2021, no successor agreement (as at August 2026). Building depreciation straight-line at 3 % under § 7(4) sentence 1 no. 2 lit. a EStG (completion after 31 December 2022) on 80 % of the purchase price; the declining-balance depreciation under § 7(5a) EStG is available only for residential buildings located in the EU or EEA and is therefore not applied to a third-country property such as one in Dubai. Marginal tax rate incl. solidarity surcharge 47.475 %, corporate income tax incl. solidarity surcharge 15.825 %, low-taxation threshold under § 8(5) AStG 15 % since assessment period 2024.</p>
+        <p><b>Deviations from the underlying Excel file.</b> Four cells in sheet 08 are still stored as fixed values rather than live formulas, despite a change log stating otherwise: the acquisition cost for § 23 EStG (should reference the total investment cost from sheet 02), the acquisition cost for § 6 AStG (should reference sheet 01) and the UAE tax for structures C and D (should reference the tax calculated in sheet 07 for the respective holding form). With the model values set here this happens to produce the same result; if you change the purchase price, acquisition cost or portfolio factor appreciably, the Excel file no longer computes correctly at these four points. This module uses the live, correct linkage throughout.</p>
+        <p>All figures are a non-binding model calculation and do not replace tax or legal advice in an individual case. EUR/AED conversion at 4.2769.</p>
+      </div>
+    </main>
+  </div>
+</div>
+<script>const D={P:2000000,A:1000,PGI:132000,v:0.06,SC:18,N:25,LTV:0.6,rate:0.0475,n:25,dmin:1.25,cap:0.0475,sell:0.02,g:0.03,T:10,GS:0.45,beteiligung:1,gw:5000000,ak:25000,raten:7,Ke:0.1105};
+const FX=4.2769;let cur='AED';const $=id=>document.getElementById(id);
+const nf0=new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}),nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=(x,d=1)=>isFinite(x)?new Intl.NumberFormat('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}).format(x*100)+' %':'–';
+const moneyAED=x=>nf0.format(cur==='EUR'?x/FX:x)+' '+cur;
+const moneyEUR=x=>nf0.format(x)+' EUR';
+const fmt={P:v=>nf0.format(v),A:v=>nf0.format(v)+' sqft',PGI:v=>nf0.format(v),v:v=>pct(v,0),SC:v=>nf2.format(v),N:v=>v,LTV:v=>pct(v,0),rate:v=>pct(v,2),n:v=>v+' yrs',dmin:v=>nf2.format(v)+'x',cap:v=>pct(v,2),sell:v=>pct(v,2),g:v=>pct(v,2),T:v=>v+' yrs',GS:v=>pct(v,0),beteiligung:v=>pct(v,0),gw:v=>nf0.format(v)+' EUR',ak:v=>nf0.format(v)+' EUR',raten:v=>v,Ke:v=>pct(v,2)};
+const af=(r,n)=>(1-(1+r/12)**(-n*12))/(r/12);
+const pmtY=(L,r,n)=>L/af(r,n)*12;
+function balAfter(L,r,n,y){const i=r/12,m=L/af(r,n);let b=L;for(let k=0;k<y*12&&k<n*12;k++)b=b*(1+i)-m;return Math.max(0,b)}
+function irr(c){const f=r=>c.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);let lo=-0.99,hi=2;if(!(f(lo)*f(hi)<0))return NaN;for(let k=0;k<200;k++){const m=(lo+hi)/2;if(f(lo)*f(m)<=0)hi=m;else lo=m}return(lo+hi)/2}
+function PV(r,n,pmt){return pmt*(1-(1+r)**(-n))/r}
+function read(){const p={};for(const k in D)p[k]=parseFloat($(k).value);return p}
+const FREIBETRAG=375000,CTSATZ=0.09,GEBANTEIL=0.8,AFA_DE=0.03,KSt=0.15825,NIEDRIGST=0.15,TEV=0.6;
+function calcObjekt(p){
+  const EGI=p.PGI*(1-p.v),opx=p.A*p.SC+EGI*0.10+3000,NOI=EGI-opx; // Instandhaltung+PM je 5%, Versicherung fix wie Modellwert
+  const L=Math.min(p.LTV*p.P,Math.max(0,NOI/p.dmin/12*af(p.rate,p.n)));
+  const DS=L>0?pmtY(L,p.rate,p.n):0,bal1=L>0?balAfter(L,p.rate,p.n,1):0,Tilg1=L-bal1,Zins1=L>0?DS-Tilg1:0;
+  const AfA_vae=p.P*0.8/20, AfA_de=p.P*GEBANTEIL*AFA_DE;
+  return{NOI,L,Zins1,AfA_vae,AfA_de,EGI,DS};
+}
+function calcVaeTax(NOIp,Zinsp,AfAp){
+  const Erg=NOIp-Zinsp-AfAp;
+  const fb=-Math.min(FREIBETRAG,Math.max(0,Erg));
+  const bmg=Math.max(0,Erg+fb);
+  return{Erg,bmg,tax:bmg*CTSATZ};
+}
+function kpi(k,v,s=''){return `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`}
+function verdict(cls,head,txt){return`<div class="verdict ${cls}"><b>${head}</b><span>${txt}</span></div>`}
+
+function render(){
+  const p=read();for(const k in D)$('o_'+k).textContent=fmt[k](p[k]);
+  const o=calcObjekt(p);
+  const GSeff=p.GS*1.055;
+  const NOIp=o.NOI*p.N, Zinsp=o.Zins1*p.N, AfAvaeP=o.AfA_vae*p.N, AfAdeP=o.AfA_de*p.N;
+  const vae=calcVaeTax(NOIp,Zinsp,AfAvaeP); // Free-Zone / Non-resident Steuer, live (korrigiert)
+  const money=moneyAED;
+
+  // A. Vier Strukturen
+  const BemA = NOIp - Zinsp - AfAdeP; // §21 EStG Direkterwerb
+  const BemD = BemA * p.beteiligung; // nicht-ansässige jur. Person, Nexus, mit Beteiligungsquote
+  const vaeC=vae.tax, vaeD=vae.tax; // dieselbe Rechtslage: Free-Zone bzw. Nicht-ansässig, beide 9% auf ident. Bemessungsgrundlage
+  const taxA=Math.max(0,BemA)*GSeff, taxD=Math.max(0,BemD)*GSeff;
+  const creditD=Math.min(taxD,vaeD), netD=taxD-creditD;
+  const cols=[
+    {name:'A — Private assets, resident in Germany', noi:NOIp, vaeSteuer:0, bem:BemA, satz:GSeff, taxVor:taxA, anr:0, netto:taxA, gesamt:taxA-0},
+    {name:'B — Private assets, after moving to the UAE', noi:NOIp, vaeSteuer:0, bem:0, satz:0, taxVor:0, anr:0, netto:0, gesamt:0},
+    {name:'C — UAE company, shareholder in Germany', noi:NOIp, vaeSteuer:vaeC, bem:BemD, satz:GSeff, taxVor:taxD, anr:creditD, netto:netD, gesamt:netD-vaeC},
+    {name:'D — German GmbH, UAE permanent establishment', noi:NOIp, vaeSteuer:vaeD, bem:BemD, satz:KSt, taxVor:Math.max(0,BemD)*KSt, anr:Math.min(Math.max(0,BemD)*KSt,vaeD), netto:Math.max(0,BemD)*KSt-Math.min(Math.max(0,BemD)*KSt,vaeD), gesamt:(Math.max(0,BemD)*KSt-Math.min(Math.max(0,BemD)*KSt,vaeD))-vaeD},
+  ];
+  let h='<tr><th>Item</th>'+cols.map(c=>`<th>${c.name}</th>`).join('')+'</tr>';
+  h+='<tr><td>NOI (portfolio)</td>'+cols.map(()=>`<td>${money(NOIp)}</td>`).join('')+'</tr>';
+  h+='<tr><td>UAE tax (expense)</td>'+cols.map(c=>`<td class="neg">${money(-c.vaeSteuer)}</td>`).join('')+'</tr>';
+  h+='<tr><td>German tax base</td>'+cols.map(c=>`<td class="${c.bem<0?'neg':''}">${money(c.bem)}</td>`).join('')+'</tr>';
+  h+='<tr><td>German tax rate</td>'+cols.map(c=>`<td>${pct(c.satz,2)}</td>`).join('')+'</tr>';
+  h+='<tr><td>German tax before credit</td>'+cols.map(c=>`<td>${money(c.taxVor)}</td>`).join('')+'</tr>';
+  h+='<tr><td>less credit for foreign tax</td>'+cols.map(c=>`<td class="neg">${money(-c.anr)}</td>`).join('')+'</tr>';
+  h+='<tr><td>German tax, net</td>'+cols.map(c=>`<td>${money(c.netto)}</td>`).join('')+'</tr>';
+  h+='<tr class="sum"><td>Total tax burden</td>'+cols.map(c=>`<td>${money(c.gesamt)}</td>`).join('')+'</tr>';
+  h+='<tr><td>Effective rate on NOI</td>'+cols.map(c=>`<td>${pct(NOIp?c.gesamt/NOIp:0,2)}</td>`).join('')+'</tr>';
+  $('t_a').innerHTML=h;
+  const spreadAB=cols[0].gesamt-cols[1].gesamt;
+  $('v_a').innerHTML=verdict(spreadAB>0?'warn':'ok','Value of the move: '+money(spreadAB),'The step from column A to column B is the ongoing tax saving achieved by moving. Column D is a retention rate: on distribution to a person resident in Germany, withholding tax is added, which is not included here.');
+
+  // B. §23 EStG
+  const EGI=o.EGI, opx=p.A*p.SC+EGI*0.10+3000;
+  const GIK = p.P*1.0730167057555446; // Erwerbsnebenkosten ø 7,3% wie im Retail-Modell, konsistent zu 02_Erwerb
+  const kumAfA = Math.min(p.T,1/AFA_DE)*o.AfA_de;
+  const NOIt=t=>{const egiT=p.PGI*(1+p.g)**(t-1)*(1-p.v); const scT=p.A*p.SC*(1+p.g)**(t-1); const insT=3000*(1+p.g)**(t-1); return egiT-(scT+egiT*0.10+insT)};
+  const saleT=NOIt(p.T)*(1+p.g)/p.cap, sellCost=-saleT*p.sell;
+  const veraeGewinn=saleT+sellCost-(GIK-kumAfA);
+  const innerhalb=p.T<=10;
+  const steuerInnerhalb=Math.max(0,veraeGewinn)*GSeff, steuerAusserhalb=0, wertFrist=steuerInnerhalb-steuerAusserhalb;
+  const svg=$('frist');const Wd=700,y=35;const X=t=>10+(t/15)*660;
+  svg.innerHTML=`<line x1="10" x2="670" y1="${y}" y2="${y}" stroke="var(--rule)" stroke-width="10"/>`+
+    `<rect x="10" width="${X(10)-10}" y="${y-5}" height="10" fill="var(--red-soft)"/>`+
+    `<rect x="${X(10)}" width="${670-X(10)}" y="${y-5}" height="10" fill="var(--teal-soft)"/>`+
+    `<line x1="${X(10)}" x2="${X(10)}" y1="10" y2="60" stroke="var(--ink)" stroke-width="2"/><text x="${X(10)}" y="8" font-size="11" text-anchor="middle">10 years</text>`+
+    `<circle cx="${X(Math.min(p.T,15))}" cy="${y}" r="6" fill="${innerhalb?'var(--red)':'var(--teal)'}"/><text x="${X(Math.min(p.T,15))}" y="${y+22}" font-size="12" text-anchor="middle" font-weight="600">Your holding period: ${p.T} yrs</text>`+
+    `<text x="10" y="${y+40}" font-size="11" fill="var(--muted)">taxable</text><text x="670" y="${y+40}" font-size="11" text-anchor="end" fill="var(--muted)">tax-free</text>`;
+  $('k_b').innerHTML=kpi('Capital gain',money(veraeGewinn))+kpi('Within the ten-year period',innerhalb?'yes — taxable':'no — tax-free')+kpi('Tax on sale within the period',money(steuerInnerhalb))+kpi('Value of the period expiring',money(wertFrist),'one day makes the difference');
+  $('v_b').innerHTML=innerhalb?verdict('warn','Taxable','The sale falls within the ten-year period of § 23(1) sentence 1 no. 1 EStG. Depreciation deducted in prior years increases the gain under § 23(3) sentence 4 EStG and is therefore recaptured on exit.'):verdict('ok','Period expired','Once the ten-year period has elapsed the capital gain is tax-free, regardless of its size.');
+
+  // C. §6 AStG
+  const fikt=p.gw-p.ak, stpfl=fikt*TEV, steuer=stpfl*GSeff;
+  const rate_j=steuer/p.raten, bw=PV(p.Ke,p.raten,rate_j), vorteil=steuer-bw;
+  $('k_c').innerHTML=kpi('Deemed capital gain',moneyEUR(fikt))+kpi('Taxable portion (60%)',moneyEUR(stpfl))+kpi('Exit tax',moneyEUR(steuer))+kpi('Annual instalment ('+p.raten+'x)',moneyEUR(rate_j))+kpi('Present value of the instalments',moneyEUR(bw),'discounted at '+pct(p.Ke,2))+kpi('Deferral benefit',moneyEUR(vorteil),pct(vorteil/steuer,1)+' of the tax');
+  $('v_c').innerHTML=verdict('warn','Interest-free deferral is a real economic benefit','§ 6(4) AStG grants seven equal annual instalments free of interest, regularly against the provision of security. On return within seven years, extendable to twelve, the tax is cancelled retroactively (§ 6(3) AStG) — the move therefore need not be permanent.');
+
+  // D. Hinzurechnung
+  const step1=p.beteiligung>0.5, step2=true, step3=CTSATZ<NIEDRIGST, step4=false;
+  const steps=[
+    [step1,'Control by German residents','§ 7(1), (2) AStG: more than 50 % of voting rights, capital or profit entitlement. Shareholding here: '+pct(p.beteiligung,0)+'.'],
+    [step2,'Passive income','§ 8(1) no. 6 lit. b AStG: letting is passive unless the income would be exempt under a double taxation agreement. Absent such an agreement, this counter-exception does not apply.'],
+    [step3,'Low taxation','§ 8(5) AStG: 9 % UAE Corporate Tax is below the low-taxation threshold of 15 % (since assessment period 2024).'],
+    [!step4,'Substance / motive test not available','§ 8(2) AStG is open only to companies with their seat or place of management in the EU or EEA. The UAE is a third country, so the counter-evidence of economic substance is excluded.'],
+  ];
+  $('cascade').innerHTML=steps.map((s,i)=>`<li class="${s[0]?'':'no'}"><span class="n">${i+1}</span><span><b>${s[1]}:</b> ${s[0]?'met':'not met'}. ${s[2]}</span></li>`).join('');
+  const greift=step1&&step2&&step3;
+  const HZB=BemD, taxHZB=Math.max(0,HZB)*GSeff, anrHZB=Math.min(taxHZB,vaeC), nettoHZB=Math.max(0,taxHZB-anrHZB), gesamtHZB=nettoHZB+vaeC*p.beteiligung;
+  $('k_d').innerHTML=kpi('Result of the test',greift?'CFC rules apply':'CFC rules do not apply')+kpi('CFC inclusion amount',money(HZB))+kpi('German tax thereon',money(taxHZB))+kpi('less credit for UAE CT (§ 12 AStG)',money(-anrHZB))+kpi('Net burden, Germany',money(nettoHZB))+kpi('Total burden, UAE + Germany',money(gesamtHZB),pct(NOIp?gesamtHZB/NOIp:0,2)+' of NOI');
+  $('v_d').innerHTML=greift?verdict('bad','No shielding effect','Vis-à-vis a shareholder resident in Germany the UAE company provides no shield. The result is a top-up to the German level: from a German perspective the 9 % UAE Corporate Tax is merely a down payment.'):verdict('ok','No CFC inclusion','One of the four conditions is not met.');
+
+  // F. §2a
+  const bem21=o.NOI-o.Zins1-o.AfA_de; // Einzelobjekt, nicht Portfolio
+  const gesperrt=Math.max(0,-bem21);
+  $('k_f').innerHTML=kpi('Tax base § 21 EStG, single property',moneyAED(bem21))+kpi('Blocked loss (cumulative, year 1)',moneyAED(gesperrt))+kpi('Tax value of the blocked loss',moneyAED(gesperrt*GSeff),'at the effective rate incl. solidarity surcharge');
+  $('v_f').innerHTML=bem21<0?verdict('warn','Loss blocked','§ 2a(1) sentence 1 no. 6 lit. a EStG permits offsetting only against positive letting income from the same state. The UAE is a third country (§ 2a(2a) EStG). Column A of the four-structures table therefore often shows a tax of 0, but without any relief effect and without a loss carryforward being usable elsewhere.'):verdict('ok','No loss in year 1','The § 21 result is positive, so the restriction has no effect this year.');
+
+  post();
+}
+function setDefaults(){for(const k in D)$(k).value=D[k]}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{cur=b.dataset.cur;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+$('reset').addEventListener('click',()=>{setDefaults();render()});$('f').addEventListener('input',render);
+function post(){try{parent.postMessage({type:'bc-embed-height',id:'steuern-de',height:document.documentElement.scrollHeight},'*')}catch(e){}}
+window.addEventListener('resize',post);setDefaults();render();
+</script>
+<script>
+/* BLACK PEARL integration layer.
+   Deliberately separated from the calculation engine above: this block contains no
+   calculation, no tax logic and no formula. It only bridges to the embedding Framer
+   window (height + CTA intent). Removable without breaking the module. */
+(function(){
+  var TOOL='german-tax-layer';
+  function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
+  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+  var cta=document.getElementById('bp-cta');
+  if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
+  window.addEventListener('load',height);
+  window.addEventListener('resize',height);
+  document.addEventListener('input',height);
+  height();
+})();
+</script></body></html>

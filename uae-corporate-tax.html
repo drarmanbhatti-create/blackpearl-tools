@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>UAE Corporate Tax — BLACK PEARL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>:root{
+  /* BLACK PEARL Tokens (Master Specification v3, §2.3) */
+  --paper:#F3F0EA; --panel:#FCFBF8; --ink:#161616; --muted:#8E8B86; --rule:#DCD8D0;
+  /* Status colours: muted editorial tones, no gold, no signal green */
+  --teal:#2E4A43; --teal-soft:#E8EDEA; --amber:#6B5426; --amber-soft:#F2EDE2; --red:#6E2F2F; --red-soft:#F1E6E4;
+  --focus:#161616;
+  --serif:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+svg{display:block;overflow:hidden;max-width:100%;height:auto}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:32px 20px 48px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.12;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:400;font-size:23px;margin:0 0 4px}
+h3{font-size:14px;font-weight:600;margin:0 0 10px;color:var(--ink)}
+p.lead{max-width:68ch;color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:28px;align-items:start}
+.grid>*{min-width:0}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.inputs{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:6px 18px 16px;position:sticky;top:12px}
+@media (max-width:900px){.inputs{position:static}}
+details{border-bottom:1px solid var(--rule);padding:10px 0}
+details:last-of-type{border-bottom:0}
+summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+summary::-webkit-details-marker{display:none}
+.field{margin:10px 0 4px}
+.field label{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:4px;gap:2px 8px;min-width:0}
+.field label span:first-child,.field label>*:first-child{min-width:0}
+.field label output{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.field input[type=range]{width:100%;accent-color:var(--teal)}
+.field input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--rule);border-radius:4px;font:inherit;font-variant-numeric:tabular-nums;background:#fff;color:var(--ink)}
+.hint{font-size:12px;color:var(--muted);margin-top:2px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.toolbar{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+button.reset{border:1px solid var(--rule);background:#fff;border-radius:4px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:18px 20px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border-top:1px solid var(--rule)}
+.kpi{padding:12px 14px 12px 0;border-bottom:1px solid var(--rule)}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.kpi .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.verdict{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:4px;font-size:13.5px;margin-top:12px}
+.verdict.ok{background:var(--teal-soft);color:#0B4F4D}
+.verdict.warn{background:var(--amber-soft);color:#7A3A06}
+.verdict.bad{background:var(--red-soft);color:#7C1C21}
+.verdict b{white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+th,td{padding:7px 9px;text-align:right;font-size:13px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:600;color:var(--muted)}
+td:first-child,th:first-child{text-align:left}
+tr.sum td{font-weight:600;border-top:1px solid var(--ink)}
+.neg{color:var(--red)}
+.foot{font-size:12.5px;color:var(--muted);max-width:90ch}
+.foot p{margin:0 0 8px}
+.cta{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:#0B0B0B;color:#F4F1EB;border-radius:2px;padding:22px 24px;margin:22px 0}
+.cta p{margin:0;max-width:62ch;color:#C9C5BD;font-size:14px}
+.cta-links{display:flex;gap:10px;flex-wrap:wrap}
+.cta-button{background:#F4F1EB;color:#161616;border:0;font:inherit;font-weight:600;padding:10px 16px;border-radius:2px;font-size:14px;white-space:nowrap;cursor:pointer}
+.cta-button:hover{background:#fff}
+@media (prefers-reduced-motion:no-preference){.bar{transition:height .25s ease,y .25s ease}}
+</style></head><body><div class="wrap">
+  <h1>UAE Corporate Tax: Which Holding Structure Actually Bears Tax?</h1>
+  <p class="lead">Four holding structures for the same property, one tax regime. The module scales a single property to portfolio size, because the AED 375,000 threshold is practically never exceeded by one apartment and the real question only arises with several properties.</p>
+
+  <div class="grid">
+    <form class="inputs" id="f" onsubmit="return false" aria-label="Assumptions">
+      <details open><summary>Property</summary>
+        <div class="field"><label for="P">Purchase price (AED) <output id="o_P"></output></label><input type="range" id="P" min="500000" max="15000000" step="50000"></div>
+        <div class="field"><label for="A">Area (sqft) <output id="o_A"></output></label><input type="range" id="A" min="300" max="6000" step="25"></div>
+        <div class="field"><label for="PGI">Annual rent at full occupancy (AED) <output id="o_PGI"></output></label><input type="range" id="PGI" min="30000" max="1200000" step="1000"></div>
+        <div class="field"><label for="v">Vacancy and rent loss <output id="o_v"></output></label><input type="range" id="v" min="0" max="0.25" step="0.01"></div>
+        <div class="field"><label for="SC">Service Charge (AED/sqft) <output id="o_SC"></output></label><input type="range" id="SC" min="8" max="40" step="0.5"></div>
+      </details>
+      <details><summary>Operating costs</summary>
+        <div class="field"><label for="mt">Maintenance (% of rent) <output id="o_mt"></output></label><input type="range" id="mt" min="0" max="0.15" step="0.01"></div>
+        <div class="field"><label for="pm">Property management (% of rent) <output id="o_pm"></output></label><input type="range" id="pm" min="0" max="0.25" step="0.01"></div>
+        <div class="field"><label for="ins">Insurance and other (AED p.a.) <output id="o_ins"></output></label><input type="range" id="ins" min="0" max="20000" step="500"></div>
+      </details>
+      <details><summary>Financing</summary>
+        <div class="field"><label for="LTV">Target leverage (LTV) <output id="o_LTV"></output></label><input type="range" id="LTV" min="0" max="0.75" step="0.05"></div>
+        <div class="field"><label for="rate">Interest rate p.a. <output id="o_rate"></output></label><input type="range" id="rate" min="0.025" max="0.08" step="0.0025"></div>
+        <div class="field"><label for="n">Term (years) <output id="o_n"></output></label><input type="range" id="n" min="10" max="25" step="1"></div>
+        <div class="field"><label for="dmin">Bank minimum DSCR <output id="o_dmin"></output></label><input type="range" id="dmin" min="1" max="1.6" step="0.05"></div>
+      </details>
+      <details open><summary>Portfolio and UAE depreciation</summary>
+        <div class="field"><label for="N">Portfolio factor (number of properties) <output id="o_N"></output></label><input type="range" id="N" min="1" max="100" step="1"></div>
+        <div class="hint">Scales the single property. Only this reveals at what point the AED 375,000 threshold is exceeded at all.</div>
+        <div class="field"><label for="gebA">Building share of purchase price <output id="o_gebA"></output></label><input type="range" id="gebA" min="0.5" max="0.95" step="0.05"></div>
+        <div class="field"><label for="ndVae">Useful life, UAE accounting (years) <output id="o_ndVae"></output></label><input type="range" id="ndVae" min="10" max="40" step="1"></div>
+      </details>
+    </form>
+
+    <main>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="AED" aria-pressed="true">AED</button><button type="button" data-cur="EUR" aria-pressed="false">EUR</button></div>
+        <button type="button" class="reset" id="reset">Reset to model values</button>
+      </div>
+
+      <section class="card">
+        <h2>A. Four holding structures in principle</h2>
+        <div class="scroll"><table id="t_grund"></table></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-b">
+        <h2 id="h-b">B. Tax calculation, year 1, portfolio</h2>
+        <div class="scroll"><table id="t_calc"></table></div>
+        <div id="v_calc"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-b2">
+        <h2 id="h-b2">Counter-check: the same structure without debt financing</h2>
+        <p class="foot" style="margin:0 0 10px">Interest expense and building depreciation together determine whether a tax base arises at all.</p>
+        <div class="scroll"><table id="t_gegen"></table></div>
+        <div id="v_gegen"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-c">
+        <h2 id="h-c">C. Interest deduction limitation (General Interest Deduction Limitation Rule)</h2>
+        <svg id="ebitda" viewBox="0 0 700 90" width="100%" role="img" aria-label="Interest limitation test"></svg>
+        <div id="v_ebitda"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-d">
+        <h2 id="h-d">D. Small Business Relief</h2>
+        <div class="kpis" id="k_sbr"></div>
+        <div id="v_sbr"></div>
+      </section>
+
+      <!-- TODO (Master Specification v3, §10): booking provider not yet selected.
+           This button does NOT trigger a booking. It reports the intent via postMessage to the
+           embedding window; the unified booking flow is wired up there in Framer.
+           Message: { type:'bp-tool-cta', tool:'uae-corporate-tax', action:'book-consultation' } -->
+      <div class="cta">
+        <p>9% UAE Corporate Tax is only half the calculation. Without a double taxation agreement, the German side determines what remains of the saving.</p>
+        <div class="cta-links">
+          <button type="button" class="cta-button" id="bp-cta">Book a Consultation</button>
+        </div>
+      </div>
+
+      <div class="foot">
+        <p><b>Legal basis.</b> Federal Decree-Law No. 47 of 2022 (Corporate Tax Law) together with Cabinet Decisions 49/2023, 55/2023, 56/2023 and 100/2023. Natural persons are not subject to corporate tax on privately held real estate outside a licensing requirement (Art. 11(6) CT Law in conjunction with Cabinet Decision 49/2023). A Free Zone company regularly does not derive Qualifying Income from residential real estate (Cabinet Decision 100/2023) and therefore effectively pays the same rate as a Mainland company. Nexus of a non-resident juridical person: Cabinet Decision 56/2023. Interest limitation: 30% of tax EBITDA, safe harbour AED 12m net interest expense. Small Business Relief: Ministerial Decision No. 131 of 2026 of 29 July 2026, revenue threshold AED 3m, extended to tax periods ending on or before 31 December 2029.</p>
+        <p><b>Methodology.</b> NOI as in the retail module, multiplied by the portfolio factor. Year 1 interest expense from the annuity calculation. Building depreciation under UAE accounting on a straight-line basis over the useful life set above, independent of German depreciation. Tax base = portfolio NOI less interest expense less depreciation, reduced by the AED 375,000 threshold (not for natural persons, who are not liable in principle). All figures are a non-binding model calculation and do not replace tax advice in an individual case.</p>
+      </div>
+    </main>
+  </div>
+</div>
+<script>const D={P:2000000,A:1000,PGI:132000,v:0.06,SC:18,mt:0.05,pm:0.05,ins:3000,LTV:0.6,rate:0.0475,n:25,dmin:1.25,N:25,gebA:0.8,ndVae:20};
+const FX=4.2769;let cur='AED';const $=id=>document.getElementById(id);
+const nf0=new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}),nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=(x,d=1)=>isFinite(x)?new Intl.NumberFormat('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}).format(x*100)+' %':'–';
+const money=x=>nf0.format(cur==='EUR'?x/FX:x)+' '+cur;
+const fmt={P:v=>nf0.format(v),A:v=>nf0.format(v)+' sqft',PGI:v=>nf0.format(v),v:v=>pct(v,0),SC:v=>nf2.format(v),mt:v=>pct(v,0),pm:v=>pct(v,0),ins:v=>nf0.format(v),LTV:v=>pct(v,0),rate:v=>pct(v,2),n:v=>v+' yrs',dmin:v=>nf2.format(v)+'x',N:v=>v,gebA:v=>pct(v,0),ndVae:v=>v+' yrs'};
+const af=(r,n)=>(1-(1+r/12)**(-n*12))/(r/12);
+const pmtY=(L,r,n)=>L/af(r,n)*12;
+function balAfter(L,r,n,y){const i=r/12,m=L/af(r,n);let b=L;for(let k=0;k<y*12;k++)b=b*(1+i)-m;return Math.max(0,b)}
+function read(){const p={};for(const k in D)p[k]=parseFloat($(k).value);return p}
+const FREIBETRAG=375000,CTSATZ=0.09,EBITDAQ=0.3,SAFEH=12000000,SBR=3000000;
+function calc(p){
+  const EGI=p.PGI*(1-p.v),opx=p.A*p.SC+EGI*(p.mt+p.pm)+p.ins,NOI=EGI-opx;
+  const L=Math.min(p.LTV*p.P,Math.max(0,NOI/p.dmin/12*af(p.rate,p.n)));
+  const DS=L>0?pmtY(L,p.rate,p.n):0,bal1=L>0?balAfter(L,p.rate,p.n,1):0,Tilg1=L-bal1,Zins1=L>0?DS-Tilg1:0;
+  const AfA=p.P*p.gebA/p.ndVae;
+  const NOIp=NOI*p.N,Zinsp=Zins1*p.N,AfAp=AfA*p.N;
+  const Erg=NOIp-Zinsp-AfAp;
+  const cols=['Natural person','Free Zone (QFZP)','Mainland','Non-resident'];
+  const nat=[true,false,false,false];
+  const rows=cols.map((name,i)=>{
+    if(nat[i])return{name,erg:Erg,fb:0,bmg:0,satz:0,tax:0,q:0};
+    const fb=-Math.min(FREIBETRAG,Math.max(0,Erg));
+    const bmg=Math.max(0,Erg+fb);
+    const tax=bmg*CTSATZ;
+    return{name,erg:Erg,fb,bmg,satz:CTSATZ,tax,q:NOIp?tax/NOIp:0};
+  });
+  // Gegenprobe ohne Fremdfinanzierung
+  const ErgNF=NOIp-AfAp;
+  const rowsNF=cols.map((name,i)=>{
+    if(nat[i])return{name,tax:0};
+    const bmg=Math.max(0,ErgNF-FREIBETRAG);
+    return{name,tax:bmg*CTSATZ};
+  });
+  const wirkung=rows.map((r,i)=>rowsNF[i].tax-r.tax);
+  // Zinsschranke
+  const EBITDA=NOIp,lim=EBITDAQ*EBITDA,abzugsf=Math.min(Zinsp,Math.max(lim,SAFEH)),nabzugsf=Zinsp-abzugsf;
+  // SBR
+  const Umsatz=EGI*p.N,eingehalten=Umsatz<=SBR;
+  return{NOI,L,Zins1,AfA,NOIp,Zinsp,AfAp,Erg,rows,ErgNF,rowsNF,wirkung,EBITDA,lim,abzugsf,nabzugsf,Umsatz,eingehalten,taxD:rows[2].tax};
+}
+const kpi=(k,v,s='')=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
+const verdict=(cls,head,txt)=>`<div class="verdict ${cls}"><b>${head}</b><span>${txt}</span></div>`;
+function tGrund(){
+  const rows=[
+    ['CT liability in principle','no','yes','yes','yes (nexus)'],
+    ['Applicable rate','0 %','9 %','9 %','9 %'],
+    ['Registration requirement','only above AED 1m revenue','yes','yes','yes'],
+    ['AED 375,000 threshold','not applicable','yes','yes','yes'],
+  ];
+  let h='<tr><th>Item</th><th>Natural person</th><th>Free Zone (QFZP)</th><th>Mainland</th><th>Non-resident</th></tr>';
+  rows.forEach(r=>h+='<tr><td>'+r[0]+'</td>'+r.slice(1).map(c=>`<td style="text-align:center">${c}</td>`).join('')+'</tr>');
+  $('t_grund').innerHTML=h;
+}
+function render(){
+  const p=read();for(const k in D)$('o_'+k).textContent=fmt[k](p[k]);
+  const m=calc(p);
+  tGrund();
+  const f=v=>money(v);
+  let h='<tr><th>Item</th>'+m.rows.map(r=>`<th>${r.name}</th>`).join('')+'</tr>';
+  h+='<tr><td>NOI (portfolio)</td>'+m.rows.map(()=>`<td>${f(m.NOIp)}</td>`).join('')+'</tr>';
+  h+='<tr><td>less interest expense</td>'+m.rows.map(()=>`<td class="neg">${f(-m.Zinsp)}</td>`).join('')+'</tr>';
+  h+='<tr><td>less building depreciation</td>'+m.rows.map(()=>`<td class="neg">${f(-m.AfAp)}</td>`).join('')+'</tr>';
+  h+='<tr><td>Taxable result</td>'+m.rows.map(r=>`<td class="${r.erg<0?'neg':''}">${f(r.erg)}</td>`).join('')+'</tr>';
+  h+='<tr><td>less threshold</td>'+m.rows.map(r=>`<td class="neg">${f(r.fb)}</td>`).join('')+'</tr>';
+  h+='<tr><td>Tax base</td>'+m.rows.map(r=>`<td>${f(r.bmg)}</td>`).join('')+'</tr>';
+  h+='<tr class="sum"><td>UAE Corporate Tax</td>'+m.rows.map(r=>`<td>${f(r.tax)}</td>`).join('')+'</tr>';
+  h+='<tr><td>Effective rate on NOI</td>'+m.rows.map(r=>`<td>${pct(r.q,2)}</td>`).join('')+'</tr>';
+  $('t_calc').innerHTML=h;
+  const allZero=m.rows.every(r=>r.tax===0);
+  $('v_calc').innerHTML=allZero?verdict('ok','Tax base of zero','Interest expense and building depreciation exceed portfolio NOI. With these inputs no structure incurs corporate tax.'):verdict('warn','Positive tax base','From here the threshold no longer absorbs the full amount. Check the portfolio factor: with a single property this is often not yet an issue, with several properties it becomes one.');
+  let h2='<tr><th>Item</th>'+m.rows.map(r=>`<th>${r.name}</th>`).join('')+'</tr>';
+  h2+='<tr><td>Taxable result excluding interest expense</td>'+m.rowsNF.map(()=>`<td>${f(m.ErgNF)}</td>`).join('')+'</tr>';
+  h2+='<tr><td>UAE Corporate Tax without debt financing</td>'+m.rowsNF.map(r=>`<td>${f(r.tax)}</td>`).join('')+'</tr>';
+  h2+='<tr class="sum"><td>Tax effect of debt financing</td>'+m.wirkung.map(w=>`<td>${f(w)}</td>`).join('')+'</tr>';
+  $('t_gegen').innerHTML=h2;
+  const wMax=Math.max(...m.wirkung);
+  $('v_gegen').innerHTML=wMax>0?verdict('ok','Interest and depreciation neutralise the tax base','This is the actual finding: for a debt-financed residential property the 9 % only bite once interest and depreciation become small relative to NOI, typically towards the end of the fixed-rate period or at low leverage.'):verdict('warn','No difference with these inputs','The tax base is the same with and without debt financing (usually zero).');
+  const svg=$('ebitda');const Wd=700,x0=10,x1=670,mx=Math.max(m.Zinsp,m.lim,1)*1.15;const X=v=>x0+(x1-x0)*v/mx;
+  svg.innerHTML=`<line x1="${X(SAFEH>mx?x1:X(SAFEH))}" y1="0" y2="0" x2="0"/>`+
+    `<rect x="${x0}" y="10" width="${X(m.Zinsp)-x0}" height="18" fill="${m.nabzugsf>0?'var(--red)':'var(--teal)'}"/><text x="${x0+6}" y="23" font-size="12" fill="#fff">Net interest expense ${money(m.Zinsp)}</text>`+
+    `<rect x="${x0}" y="38" width="${X(m.lim)-x0}" height="18" fill="#9AA6B5"/><text x="${x0+6}" y="51" font-size="12" fill="#fff">30 % EBITDA ${money(m.lim)}</text>`+
+    (SAFEH<mx?`<line x1="${X(SAFEH)}" x2="${X(SAFEH)}" y1="4" y2="60" stroke="var(--amber)" stroke-width="2"/><text x="${X(SAFEH)+4}" y="72" font-size="11" fill="var(--amber)">Safe Harbour ${money(SAFEH)}</text>`:`<text x="${x1-4}" y="72" font-size="11" text-anchor="end" fill="var(--amber)">Safe Harbour ${money(SAFEH)} is outside the axis range</text>`);
+  $('v_ebitda').innerHTML=m.nabzugsf>0?verdict('bad','Not deductible: '+money(m.nabzugsf),'Net interest expense exceeds both the 30 % EBITDA limit and the AED 12m safe harbour threshold. The excess may be carried forward for ten tax periods.'):verdict('ok','Fully deductible','Net interest expense is below the AED 12m safe harbour threshold; the interest limitation does not apply, regardless of the EBITDA test. Practically always the case for single properties; for large portfolios it is the central lever on the debt ratio.');
+  $('k_sbr').innerHTML=kpi('Revenue (portfolio)',money(m.Umsatz),'effective gross rent')+kpi('Revenue threshold',money(SBR))+kpi('Threshold met',m.eingehalten?'yes':'no');
+  $('v_sbr').innerHTML=m.eingehalten?verdict('ok','Small Business Relief available','If the election is made, all revenue for this period is exempt from corporate tax, but loss and interest carryforwards are forfeited. Applies to tax periods ending on or before 31 December 2029.'):verdict('warn','Revenue threshold exceeded','Above AED 3m annual revenue Small Business Relief is no longer available.');
+  post();
+}
+function setDefaults(){for(const k in D)$(k).value=D[k]}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{cur=b.dataset.cur;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+$('reset').addEventListener('click',()=>{setDefaults();render()});$('f').addEventListener('input',render);
+function post(){try{parent.postMessage({type:'bc-embed-height',id:'steuern-vae',height:document.documentElement.scrollHeight},'*')}catch(e){}}
+window.addEventListener('resize',post);setDefaults();render();
+</script>
+<script>
+/* BLACK PEARL integration layer.
+   Deliberately separated from the calculation engine above: this block contains no
+   calculation, no tax logic and no formula. It only bridges to the embedding Framer
+   window (height + CTA intent). Removable without breaking the module. */
+(function(){
+  var TOOL='uae-corporate-tax';
+  function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
+  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+  var cta=document.getElementById('bp-cta');
+  if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
+  window.addEventListener('load',height);
+  window.addEventListener('resize',height);
+  document.addEventListener('input',height);
+  height();
+})();
+</script></body></html>
