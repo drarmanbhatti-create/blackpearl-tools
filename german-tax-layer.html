@@ -73,7 +73,69 @@ ol.cascade li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;bord
 ol.cascade li.no{background:var(--red-soft)}
 ol.cascade .n{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:600}
 ol.cascade li.no .n{background:var(--red)}
-</style></head><body><div class="wrap">
+</style>
+<style>
+/* ===================================================================
+   BLACK PEARL responsive layer.
+   Layout only: no colours of the identity changed, no content removed,
+   no calculation touched. Desktop (>1180px) is unchanged.
+   =================================================================== */
+.field label{flex-wrap:wrap}
+.chart-box{width:100%}
+.chart-box>svg{width:100%}
+
+/* Small laptop / large tablet: slimmer input column, more room for tables */
+@media (min-width:901px) and (max-width:1180px){
+  .grid{grid-template-columns:minmax(270px,300px) minmax(0,1fr);gap:22px}
+}
+
+/* Tablet: inputs flow into two columns above the results */
+@media (min-width:601px) and (max-width:900px){
+  .inputs{column-count:2;column-gap:32px;padding:6px 20px 14px}
+  .inputs details{break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid}
+  .inputs details:last-of-type{border-bottom:1px solid var(--rule)}
+}
+
+/* Tablet and mobile: wide tables scroll inside their own box with a fixed label column */
+@media (max-width:900px){
+  .scroll{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .scroll th:first-child,.scroll td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);box-shadow:1px 0 0 var(--rule)}
+  .scroll th:not(:first-child){white-space:normal;min-width:8.5em;vertical-align:bottom}
+}
+@media (max-width:700px){
+  .verdict{flex-direction:column;gap:4px}
+  .verdict b{white-space:normal}
+}
+
+/* Mobile: single column, readable type, touch-friendly controls */
+@media (max-width:600px){
+  .wrap{padding:24px 16px 40px}
+  h1{font-size:26px;line-height:1.15}
+  h2{font-size:20px;line-height:1.2;margin-bottom:8px}
+  p.lead{font-size:14.5px;margin-bottom:22px}
+  .grid{gap:20px}
+  .inputs{padding:4px 14px 12px}
+  .card{padding:16px 14px;margin-bottom:14px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}
+  .kpi{padding:10px 10px 10px 0}
+  .kpi .v{font-size:18px}
+  .field{margin:12px 0 6px}
+  .field input[type=range]{height:28px}
+  .seg button,button.reset{padding:9px 14px}
+  .scroll td:first-child,.scroll th:first-child{white-space:normal;min-width:9.5em;max-width:12em}
+  .chart-box{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:4px}
+  .chart-box>svg{min-width:540px}
+  .cta{padding:18px 16px}
+  .cta-links,.cta-button{width:100%}
+  ol.cascade li{padding:9px 10px}
+  /* The ten-year timeline must stay whole (the dot's position is the message):
+     it fits the width and only its labels are enlarged. */
+  .chart-box.fit{overflow:visible;padding:12px 0 16px}
+  .chart-box.fit>svg{min-width:0;overflow:visible}
+  .chart-box.fit text{font-size:18px}
+}
+</style>
+</head><body><div class="wrap">
   <h1>The German Tax Layer Without a Double Taxation Agreement</h1>
   <p class="lead">The Germany–UAE double taxation agreement expired on 31 December 2021 and no successor agreement is in place. What remains is unilateral credit relief under § 34c EStG and § 26 KStG respectively, not exemption. What this means for four typical structures, and what additionally applies on exit, on departure and under the CFC rules.</p>
 
@@ -125,7 +187,7 @@ ol.cascade li.no .n{background:var(--red)}
 
       <section class="card" aria-labelledby="h-b">
         <h2 id="h-b">B. § 23 EStG — capital gain on privately held property</h2>
-        <svg id="frist" viewBox="0 0 700 70" width="100%" role="img" aria-label="Ten-year period"></svg>
+        <div class="chart-box fit"><svg id="frist" viewBox="0 0 700 70" width="100%" role="img" aria-label="Ten-year period"></svg></div>
         <div class="kpis" id="k_b"></div>
         <div id="v_b"></div>
       </section>
@@ -294,16 +356,98 @@ window.addEventListener('resize',post);setDefaults();render();
 /* BLACK PEARL integration layer.
    Deliberately separated from the calculation engine above: this block contains no
    calculation, no tax logic and no formula. It only bridges to the embedding Framer
-   window (height + CTA intent). Removable without breaking the module. */
+   window (height + CTA intent). Removable without breaking the module.
+
+   Height reporting: { type:'bp-tool-height', tool, height }
+   - measures the true bottom of the rendered content, not documentElement.scrollHeight
+     (inside an iframe that value never drops below the iframe's own height, so the
+     frame could only ever grow);
+   - ResizeObserver on the content + MutationObserver on the DOM + toggle/input/change/
+     click/resize/font events catch every expansion, collapse and re-render;
+   - coalesced to at most one measurement per animation frame (setTimeout fallback for
+     throttled iframes), sent only when the value actually changes;
+   - runaway guard: if the height flips between two values many times a second (e.g. a
+     scrollbar appearing and disappearing while the frame is resized), the larger value is held;
+   - the parent may request the current height at any time by posting
+     { type:'bp-tool-height-request' } into the frame. */
 (function(){
   var TOOL='german-tax-layer';
   function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
-  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+
   var cta=document.getElementById('bp-cta');
   if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
-  window.addEventListener('load',height);
-  window.addEventListener('resize',height);
-  document.addEventListener('input',height);
-  height();
+
+  function px(v){ v=parseFloat(v); return isFinite(v)?v:0; }
+  function measure(){
+    var body=document.body; if(!body) return 0;
+    var bottom=0, kids=body.children;
+    for(var i=0;i<kids.length;i++){
+      var el=kids[i], tag=el.tagName;
+      if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEMPLATE') continue;
+      var cs=getComputedStyle(el);
+      if(cs.display==='none'||cs.position==='fixed') continue;
+      var r=el.getBoundingClientRect();
+      bottom=Math.max(bottom, r.bottom+px(cs.marginBottom));
+    }
+    var bs=getComputedStyle(body);
+    bottom+=px(bs.paddingBottom)+px(bs.borderBottomWidth)+px(bs.marginBottom);
+    var scrollY=window.pageYOffset||document.documentElement.scrollTop||0;
+    return Math.ceil(bottom+scrollY);
+  }
+
+  var last=-1, sent=[];
+  function flush(force){
+    var h=measure(); if(!h) return;
+    if(!force && h===last) return;
+    var now=Date.now();
+    while(sent.length && now-sent[0].t>1000) sent.shift();
+    /* Runaway guard: 10+ reports within one second that only alternate between two
+       values cannot come from the user; hold the larger one so the frame settles. */
+    if(sent.length>=10){
+      var seen={}, n=0;
+      for(var i=0;i<sent.length;i++){ if(!seen[sent[i].h]){ seen[sent[i].h]=1; n++; } }
+      if(n<=2 && seen[h]){ h=Math.max(h,last); if(h===last && !force) return; }
+    }
+    sent.push({t:now,h:h});
+    last=h;
+    send({type:'bp-tool-height',height:h});
+  }
+
+  var pending=false;
+  function schedule(){
+    if(pending) return; pending=true;
+    var done=false;
+    function run(){ if(done) return; done=true; pending=false; flush(false); }
+    if(window.requestAnimationFrame) requestAnimationFrame(run);
+    setTimeout(run,120);
+  }
+
+  if(window.ResizeObserver){
+    var ro=new ResizeObserver(schedule);
+    ro.observe(document.documentElement);
+    if(document.body){
+      ro.observe(document.body);
+      for(var i=0;i<document.body.children.length;i++){
+        var c=document.body.children[i];
+        if(c.tagName!=='SCRIPT'&&c.tagName!=='STYLE') ro.observe(c);
+      }
+    }
+  }
+  if(window.MutationObserver && document.body){
+    new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['open','class','style','hidden']});
+  }
+  document.addEventListener('toggle',schedule,true);
+  ['input','change','click','transitionend','animationend'].forEach(function(t){ document.addEventListener(t,schedule,true); });
+  window.addEventListener('resize',schedule);
+  window.addEventListener('orientationchange',schedule);
+  window.addEventListener('load',function(){ flush(true); });
+  if(document.fonts){
+    if(document.fonts.ready) document.fonts.ready.then(schedule);
+    if(document.fonts.addEventListener) document.fonts.addEventListener('loadingdone',schedule);
+  }
+  window.addEventListener('message',function(e){
+    if(e && e.data && e.data.type==='bp-tool-height-request') flush(true);
+  });
+  flush(true);
 })();
 </script></body></html>

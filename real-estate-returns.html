@@ -133,6 +133,47 @@
 #dxb-widget .shadow-card{--tw-shadow:0 1px 2px rgba(22,22,22,.05),0 8px 24px -14px rgba(22,22,22,.14)}
 </style>
 
+<style>
+/* ===================================================================
+   BLACK PEARL responsive layer.
+   Layout only: no colours of the identity changed, no content removed,
+   no calculation touched. Desktop (>=1280px) is unchanged.
+   =================================================================== */
+/* The page is an iframe document: no default 8px browser margin around the widget */
+html,body{margin:0;padding:0}
+#dxb-widget{--bp-panel:#FCFBF8}
+#dxb-widget.dark{--bp-panel:#141414}
+#dxb-widget .bp-check{display:block}
+#dxb-widget .bp-check input{display:inline-block;vertical-align:-3px;margin-right:6px}
+
+/* Small laptop: KPI cards 2 x 2, tax bridge 2 + 1, so labels are not truncated */
+@media (min-width:1024px) and (max-width:1279px){
+  #dxb-widget .bp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #dxb-widget .bp-bridge{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #dxb-widget .bp-bridge>:last-child{grid-column:1/-1}
+}
+
+/* Tablet: inputs flow into two columns */
+@media (min-width:640px) and (max-width:1023px){
+  #dxb-widget #dxb-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px;row-gap:20px}
+  #dxb-widget #dxb-inputs>*{margin-top:0!important}
+  #dxb-widget #dxb-inputs>:nth-child(n+5){grid-column:1/-1}
+}
+
+/* Tablet and mobile: cash-flow table scrolls in its own box with a fixed label column */
+@media (max-width:1023px){
+  #dxb-widget .bp-cf{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  #dxb-widget .bp-cf th:first-child,#dxb-widget .bp-cf td:first-child{position:sticky;left:0;z-index:1;background:var(--bp-panel);box-shadow:1px 0 0 rgba(22,22,22,.08);padding-right:8px}
+}
+
+/* Mobile: chart keeps legible labels and scrolls inside its own box */
+@media (max-width:639px){
+  #dxb-widget #chart{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:4px}
+  #dxb-widget #chart>svg{min-width:600px}
+  #dxb-widget .bp-cf td:first-child,#dxb-widget .bp-cf th:first-child{min-width:7.5em}
+  #dxb-widget h1{font-size:25px}
+}
+</style>
 </head><body>
 <div id="dxb-widget" class="dxb">
 <div class="bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -172,7 +213,7 @@
 
     <!-- KPI-Karten: volle Breite, damit Kennzahl und Zusatzzeilen ungekuerzt stehen -->
     <div class="order-2 lg:order-1 lg:col-span-12">
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="bp-kpis grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
     <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-card dark:border-white/10 dark:bg-navy-900">
       <div class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
@@ -340,7 +381,7 @@
                 <input id="a-dscr" type="number" step="0.05" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
               <label class="col-span-1 text-[12px] font-medium text-slate-500 dark:text-slate-400">Reg. LTV cap (%)
                 <input id="a-ltvcap" type="number" step="1" class="tnum mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-right text-[13px] font-semibold dark:border-white/10 dark:bg-navy-850"></label>
-              <label class="col-span-2 mt-1 flex items-center gap-2 text-[12px] font-medium text-slate-600 dark:text-slate-300">
+              <label class="bp-check col-span-2 mt-1 flex items-center gap-2 text-[12px] font-medium text-slate-600 dark:text-slate-300">
                 <input id="a-dscrtest" type="checkbox" class="h-4 w-4 accent-emerald-500">
                 Debt-Sizing-Doppeltest (LTV <span class="font-bold">und</span> DSCR) anwenden
               </label>
@@ -360,7 +401,7 @@
           <h2 class="text-[15px] font-bold tracking-tight">Tax bridge year 1 &ndash; UAE versus Germany</h2>
           <span class="rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Germany&ndash;UAE DTA lapsed 1 Jan 2022, no successor</span>
         </div>
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div class="bp-bridge grid grid-cols-1 gap-4 md:grid-cols-3">
           <div class="rounded-xl bg-slate-50 p-4 dark:bg-navy-850">
             <div class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400">UAE level</div>
             <ul id="t-uae" class="space-y-1.5 text-[12.5px]"></ul>
@@ -388,7 +429,7 @@
           </div>
         </div>
         <div id="chart" class="w-full"></div>
-        <div class="mt-4 -mx-1 overflow-x-auto">
+        <div class="bp-cf mt-4 -mx-1 overflow-x-auto">
           <table class="tnum min-w-[560px] text-[12.5px] text-slate-900 dark:text-slate-100">
             <thead>
               <tr class="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:border-white/10 dark:text-slate-400">
@@ -883,18 +924,99 @@
 /* BLACK PEARL integration layer.
    Deliberately separated from the calculation engine above: this block contains no
    calculation, no tax logic and no formula. It only bridges to the embedding Framer
-   window (height + CTA intent). Removable without breaking the module. */
+   window (height + CTA intent). Removable without breaking the module.
+
+   Height reporting: { type:'bp-tool-height', tool, height }
+   - measures the true bottom of the rendered content, not documentElement.scrollHeight
+     (inside an iframe that value never drops below the iframe's own height, so the
+     frame could only ever grow);
+   - ResizeObserver on the content + MutationObserver on the DOM + toggle/input/change/
+     click/resize/font events catch every expansion, collapse and re-render;
+   - coalesced to at most one measurement per animation frame (setTimeout fallback for
+     throttled iframes), sent only when the value actually changes;
+   - runaway guard: if the height flips between two values many times a second (e.g. a
+     scrollbar appearing and disappearing while the frame is resized), the larger value is held;
+   - the parent may request the current height at any time by posting
+     { type:'bp-tool-height-request' } into the frame. */
 (function(){
   var TOOL='real-estate-returns';
   function send(msg){ try{ parent.postMessage(Object.assign({tool:TOOL},msg),'*'); }catch(e){} }
-  function height(){ send({type:'bp-tool-height',height:document.documentElement.scrollHeight}); }
+
   var cta=document.getElementById('cta');
   if(cta) cta.addEventListener('click',function(){ send({type:'bp-tool-cta',action:'book-consultation'}); });
-  window.addEventListener('load',height);
-  window.addEventListener('resize',height);
-  document.addEventListener('input',height);
-  document.addEventListener('change',height);
-  height();
+
+  function px(v){ v=parseFloat(v); return isFinite(v)?v:0; }
+  function measure(){
+    var body=document.body; if(!body) return 0;
+    var bottom=0, kids=body.children;
+    for(var i=0;i<kids.length;i++){
+      var el=kids[i], tag=el.tagName;
+      if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEMPLATE') continue;
+      var cs=getComputedStyle(el);
+      if(cs.display==='none'||cs.position==='fixed') continue;
+      var r=el.getBoundingClientRect();
+      bottom=Math.max(bottom, r.bottom+px(cs.marginBottom));
+    }
+    var bs=getComputedStyle(body);
+    bottom+=px(bs.paddingBottom)+px(bs.borderBottomWidth)+px(bs.marginBottom);
+    var scrollY=window.pageYOffset||document.documentElement.scrollTop||0;
+    return Math.ceil(bottom+scrollY);
+  }
+
+  var last=-1, sent=[];
+  function flush(force){
+    var h=measure(); if(!h) return;
+    if(!force && h===last) return;
+    var now=Date.now();
+    while(sent.length && now-sent[0].t>1000) sent.shift();
+    /* Runaway guard: 10+ reports within one second that only alternate between two
+       values cannot come from the user; hold the larger one so the frame settles. */
+    if(sent.length>=10){
+      var seen={}, n=0;
+      for(var i=0;i<sent.length;i++){ if(!seen[sent[i].h]){ seen[sent[i].h]=1; n++; } }
+      if(n<=2 && seen[h]){ h=Math.max(h,last); if(h===last && !force) return; }
+    }
+    sent.push({t:now,h:h});
+    last=h;
+    send({type:'bp-tool-height',height:h});
+  }
+
+  var pending=false;
+  function schedule(){
+    if(pending) return; pending=true;
+    var done=false;
+    function run(){ if(done) return; done=true; pending=false; flush(false); }
+    if(window.requestAnimationFrame) requestAnimationFrame(run);
+    setTimeout(run,120);
+  }
+
+  if(window.ResizeObserver){
+    var ro=new ResizeObserver(schedule);
+    ro.observe(document.documentElement);
+    if(document.body){
+      ro.observe(document.body);
+      for(var i=0;i<document.body.children.length;i++){
+        var c=document.body.children[i];
+        if(c.tagName!=='SCRIPT'&&c.tagName!=='STYLE') ro.observe(c);
+      }
+    }
+  }
+  if(window.MutationObserver && document.body){
+    new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['open','class','style','hidden']});
+  }
+  document.addEventListener('toggle',schedule,true);
+  ['input','change','click','transitionend','animationend'].forEach(function(t){ document.addEventListener(t,schedule,true); });
+  window.addEventListener('resize',schedule);
+  window.addEventListener('orientationchange',schedule);
+  window.addEventListener('load',function(){ flush(true); });
+  if(document.fonts){
+    if(document.fonts.ready) document.fonts.ready.then(schedule);
+    if(document.fonts.addEventListener) document.fonts.addEventListener('loadingdone',schedule);
+  }
+  window.addEventListener('message',function(e){
+    if(e && e.data && e.data.type==='bp-tool-height-request') flush(true);
+  });
+  flush(true);
 })();
 </script>
 </body></html>
