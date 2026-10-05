@@ -33,10 +33,10 @@ cd blackpearl-tools && python3 -m http.server 8777
 
 Open `http://localhost:8777/wegzug-check/`. Opening `index.html` directly from disk also works.
 
-With no endpoint configured the form runs in **preview mode**: nothing is sent, the payload
-is printed to the browser console (and kept in `WZ.lastPayload`), and the success screen
-shows a small "Preview mode — nothing was sent" line. That line disappears once an
-endpoint is set.
+With no endpoint configured nothing is sent: the payload is printed to the browser console
+(and kept in `WZ.lastPayload`) and the visitor still sees the normal success screen. Nothing
+technical is ever shown in the page itself, so **set the endpoint before going live**, or
+submissions are lost.
 
 ## Connecting the lead destination
 

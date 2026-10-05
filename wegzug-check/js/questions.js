@@ -46,9 +46,8 @@
       {
         id: 'ties_home', section: 'ties', when: 'germanLink',
         fields: [
-          { id: 'de_home_retained', type: 'choice', required: true, layout: 'row', options: ['yes', 'no', 'undecided'] },
-          { id: 'de_family_remains', type: 'choice', required: true,
-            options: ['no', 'partner', 'children', 'partner_children', 'undecided'] }
+          { id: 'de_remaining', type: 'multi', required: true,
+            options: ['home', 'partner', 'children', 'none', 'undecided'], exclusive: ['none', 'undecided'] }
         ]
       },
       {
@@ -59,25 +58,25 @@
         ]
       },
 
-      /* C/D gate. Company ownership + professional situation */
+      /* C/D gate. Company ownership + professional situation (incl. director role) */
       {
         id: 'business', section: 'business',
         fields: [
           { id: 'owns_shares', type: 'choice', required: true, layout: 'row', options: YES_NO },
           { id: 'occupation', type: 'multi', required: true,
-            options: ['employed', 'self_employed', 'partner', 'founder', 'business_assets', 'investor', 'retired', 'other'] }
+            options: ['employed', 'director', 'self_employed', 'partner', 'founder', 'business_assets', 'investor', 'retired', 'other'] }
         ]
       },
 
-      /* C. Company ownership — only when shares are held */
+      /* C. Company ownership — only when shares are held.
+         Holding structure is captured by company_type (multi-select, includes "holding"). */
       {
         id: 'company_structure', section: 'company', when: 'ownsShares',
         fields: [
-          { id: 'company_type', type: 'choice', required: true, layout: 'grid',
-            options: ['gmbh', 'ag', 'partnership', 'foreign_corp', 'holding', 'other'] },
+          { id: 'company_type', type: 'multi', required: true, layout: 'grid',
+            options: ['gmbh', 'ag', 'partnership', 'foreign_corp', 'holding', 'other', 'unsure'], exclusive: ['unsure'] },
           { id: 'company_country', type: 'choice', required: true, layout: 'grid',
-            options: ['DE', 'EU', 'CH', 'UAE', 'OTHER', 'MULTIPLE'] },
-          { id: 'holding_exists', type: 'choice', required: true, layout: 'row', options: YES_NO_UNSURE }
+            options: ['DE', 'EU', 'CH', 'UAE', 'OTHER', 'MULTIPLE'] }
         ]
       },
       {
@@ -85,27 +84,17 @@
         fields: [
           { id: 'stake_band', type: 'choice', required: true, layout: 'grid',
             options: ['lt1', '1to10', '10to25', '25to50', 'gt50', 'unsure'] },
-          { id: 'stake_pct', type: 'number', required: false, min: 0, max: 100, step: 'any' },
-          { id: 'is_director', type: 'choice', required: true, layout: 'row', options: YES_NO }
-        ]
-      },
-      {
-        id: 'company_value', section: 'company', when: 'ownsShares',
-        fields: [
           { id: 'company_value', type: 'choice', required: true, layout: 'grid',
-            options: ['lt500k', '500k_2m', '2m_10m', '10m_50m', 'gt50m', 'unsure', 'undisclosed'] },
-          { id: 'company_restructure', type: 'choice', required: true, layout: 'grid',
-            options: ['yes', 'considering', 'no', 'unsure'] }
+            options: ['lt500k', '500k_2m', '2m_10m', '10m_50m', 'gt50m', 'unsure', 'undisclosed'] }
         ]
       },
 
-      /* D. Self-employment / business assets */
+      /* C/D. Moves or restructuring of the company or business — one question for both branches */
       {
-        id: 'business_assets', section: 'business', when: 'businessActivity',
+        id: 'restructuring', section: 'business', when: 'companyOrBusiness',
         fields: [
-          { id: 'business_moving', type: 'choice', required: true, layout: 'grid', options: ['yes', 'possibly', 'no', 'unsure'] },
-          { id: 'pre_departure_restructuring', type: 'choice', required: true, layout: 'grid',
-            options: ['yes', 'considering', 'no', 'unsure'] }
+          { id: 'restructuring_plans', type: 'multi', required: true,
+            options: ['company_move', 'assets_move', 'restructure', 'none', 'unsure'], exclusive: ['none', 'unsure'] }
         ]
       },
 

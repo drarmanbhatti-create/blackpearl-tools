@@ -15,8 +15,7 @@
     answers: {},
     errors: {},
     submitting: false,
-    submissionId: null,
-    preview: false
+    submissionId: null
   };
 
   var root, stage, progress;
@@ -40,15 +39,9 @@
     return el;
   }
 
-  function visibleSteps(answers) {
-    answers = answers || state.answers;
-    return flow.steps.filter(function (s) { return rules.test(s.when, answers); });
-  }
-  // Step list for the progress count: unanswered gating questions take their assumed value.
-  function countedSteps() {
-    var a = Object.assign({}, rules.progressAssumptions || {});
-    Object.keys(state.answers).forEach(function (k) { if (!isEmpty(state.answers[k])) a[k] = state.answers[k]; });
-    return visibleSteps(a);
+  // Steps on the visitor's actual path; skipped steps never count towards "Step n of N".
+  function visibleSteps() {
+    return flow.steps.filter(function (s) { return rules.test(s.when, state.answers); });
   }
   function currentStep() {
     for (var i = 0; i < flow.steps.length; i++) if (flow.steps[i].id === state.stepId) return flow.steps[i];
@@ -128,7 +121,7 @@
     if (view === 'intro') swap(renderIntro, { focus: dir === 'back', scroll: true, dir: dir });
     else if (view === 'step') {
       swap(renderStep, { focus: true, scroll: true, dir: dir });
-      var vs = countedSteps(), idx = vs.indexOf(currentStep());
+      var vs = visibleSteps(), idx = vs.indexOf(currentStep());
       if (WZ.embed) WZ.embed.send({ type: 'bp-tool-step', step: stepId, index: idx + 1, total: vs.length });
     } else swap(renderSuccess, { focus: true, scroll: true });
   }
@@ -137,7 +130,7 @@
 
   function renderProgress() {
     if (state.view !== 'step') { progress.hidden = true; return; }
-    var vs = countedSteps(), idx = vs.indexOf(currentStep()), n = idx + 1, total = vs.length;
+    var vs = visibleSteps(), idx = vs.indexOf(currentStep()), n = idx + 1, total = vs.length;
     progress.hidden = false;
     progress.querySelector('.wz-progress-count').textContent = t('nav.progress', { n: n, total: total });
     progress.querySelector('.wz-progress-section').textContent = t('sections.' + currentStep().section);
@@ -446,10 +439,9 @@
     var hp = view.querySelector('#wz-hp');
     var payload = WZ.submission.buildPayload(state.answers, { submissionId: state.submissionId });
     var sending = hp && hp.value
-      ? new Promise(function (r) { setTimeout(function () { r({ ok: true, preview: false }); }, 900); })
+      ? new Promise(function (r) { setTimeout(function () { r({ ok: true }); }, 900); })
       : WZ.submission.send(payload);
-    sending.then(function (res) {
-      state.preview = !!res.preview;
+    sending.then(function () {
       state.submitting = false;
       if (WZ.embed) WZ.embed.send({ type: 'bp-tool-submitted', submissionId: state.submissionId });
       go('success');
@@ -480,7 +472,6 @@
         cta('book-consultation', cfg.links.consultationUrl, t('success.book'), 'wz-btn-primary'),
         cta('back-to-site', cfg.links.homeUrl, t('success.home'), 'wz-btn-secondary')
       ]),
-      state.preview ? h('p', { class: 'wz-preview', text: t('success.preview') }) : null,
       h('aside', { class: 'wz-disclaimer' }, [h('p', { text: t('disclaimer.long') })])
     ]);
   }

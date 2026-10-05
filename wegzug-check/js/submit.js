@@ -76,9 +76,9 @@
   function send(payload) {
     var cfg = WZ.config.submission;
     if (!cfg.endpoint) {
-      if (window.console) console.info('[Wegzug Check] Preview mode, no endpoint configured. Payload:', payload);
+      if (window.console) console.info('[Wegzug Check] No endpoint configured; payload not sent:', payload);
       WZ.lastPayload = payload;
-      return new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true, preview: true }); }, 900); });
+      return new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true }); }, 900); });
     }
 
     var ctrl = window.AbortController ? new AbortController() : null;
@@ -93,7 +93,7 @@
     }).then(function (res) {
       if (timer) clearTimeout(timer);
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      return { ok: true, preview: false };
+      return { ok: true };
     }, function (err) {
       if (timer) clearTimeout(timer);
       throw err;

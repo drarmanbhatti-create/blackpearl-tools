@@ -56,16 +56,15 @@ WZ.i18n.register('en', {
     move: { title: 'Your planned move' },
     ties_home: {
       title: 'Home and family',
-      intro: 'These questions record the practical situation after your move. They are not an assessment.'
+      intro: 'This records the practical situation after your move. It is not an assessment.'
     },
     ties_presence: { title: 'Time in Germany after the move' },
     business: { title: 'Business interests' },
     company_structure: { title: 'The company', intro: 'If you hold several companies, answer for the most significant one. Details can be discussed later.' },
     company_stake: { title: 'Your shareholding' },
-    company_value: { title: 'Value and plans' },
-    business_assets: {
-      title: 'Business activity',
-      intro: 'This covers self-employment, partnerships and business assets you hold personally.'
+    restructuring: {
+      title: 'Plans for the company or business',
+      intro: 'This covers your company and any self-employed, partnership or other business activity.'
     },
     german_income: { title: 'Assets and income in Germany' },
     uae_plans: { title: 'Relocation plans' },
@@ -110,16 +109,12 @@ WZ.i18n.register('en', {
       }
     },
 
-    de_home_retained: {
-      label: 'Will a home or apartment remain available to you in Germany?',
-      hint: 'Owned or rented, including a property used by family members.',
-      options: { yes: 'Yes', no: 'No', undecided: 'Not decided yet' }
-    },
-    de_family_remains: {
-      label: 'Will your spouse / partner or children remain in Germany?',
+    de_remaining: {
+      label: 'After the move, will any of the following remain in Germany?',
+      hint: 'Select all that apply. A home means owned or rented, including one used by family members.',
       options: {
-        no: 'No, or not applicable', partner: 'Spouse / partner', children: 'Children',
-        partner_children: 'Spouse / partner and children', undecided: 'Not decided yet'
+        home: 'A home or apartment available to you', partner: 'Spouse / partner', children: 'Children',
+        none: 'None of these', undecided: 'Not decided yet'
       }
     },
     de_time_after: {
@@ -143,6 +138,7 @@ WZ.i18n.register('en', {
       label: 'Which of the following describe your professional situation?',
       options: {
         employed: 'Employed',
+        director: 'Managing director or director of a company I hold shares in',
         self_employed: 'Self-employed or freelance',
         partner: 'Partner in a partnership',
         founder: 'Founder or entrepreneur',
@@ -155,9 +151,10 @@ WZ.i18n.register('en', {
 
     company_type: {
       label: 'Type of company or structure',
+      hint: 'Select all that apply, including any holding company above or below it.',
       options: {
         gmbh: 'GmbH / UG', ag: 'AG / SE', partnership: 'Partnership (e.g. GmbH & Co. KG)',
-        foreign_corp: 'Foreign company', holding: 'Holding company', other: 'Other or not sure'
+        foreign_corp: 'Foreign company', holding: 'Holding company', other: 'Other', unsure: 'Not sure'
       }
     },
     company_country: {
@@ -167,26 +164,13 @@ WZ.i18n.register('en', {
         UAE: 'United Arab Emirates', OTHER: 'Other country', MULTIPLE: 'Several countries'
       }
     },
-    holding_exists: {
-      label: 'Is there a holding structure above or below this company?',
-      options: { yes: 'Yes', no: 'No', unsure: 'Not sure' }
-    },
     stake_band: {
       label: 'Approximate ownership, directly and indirectly combined',
-      hint: 'We ask whether your interest is 1% or more because shareholding size is one of the facts a professional review usually starts from. A range is sufficient.',
+      hint: 'Participation size can be relevant to a professional review. A range is sufficient at this stage.',
       options: {
         lt1: 'Less than 1%', '1to10': '1% to under 10%', '10to25': '10% to under 25%',
         '25to50': '25% to 50%', gt50: 'More than 50%', unsure: 'Not sure'
       }
-    },
-    stake_pct: {
-      label: 'Approximate percentage',
-      hint: 'If you know it. For example 12.5.',
-      suffix: '%'
-    },
-    is_director: {
-      label: 'Are you also managing director or director of the company?',
-      options: { yes: 'Yes', no: 'No' }
     },
     company_value: {
       label: 'Approximate value of your shareholding',
@@ -196,18 +180,14 @@ WZ.i18n.register('en', {
         '10m_50m': '€10 – 50 million', gt50m: 'Over €50 million', unsure: 'Not sure', undisclosed: 'Prefer not to say'
       }
     },
-    company_restructure: {
-      label: 'Could the company itself be moved or restructured?',
-      options: { yes: 'Yes, this is planned', considering: 'Being considered', no: 'No', unsure: 'Not sure' }
-    },
-
-    business_moving: {
-      label: 'Are business assets, functions or activities expected to move abroad with you?',
-      options: { yes: 'Yes', possibly: 'Possibly', no: 'No', unsure: 'Not sure' }
-    },
-    pre_departure_restructuring: {
-      label: 'Is any restructuring planned before your departure?',
-      options: { yes: 'Yes, planned', considering: 'Being considered', no: 'No', unsure: 'Not sure' }
+    restructuring_plans: {
+      label: 'Are any of the following planned or being considered?',
+      options: {
+        company_move: 'Moving the company, its seat or its management abroad',
+        assets_move: 'Moving business assets, functions or activities abroad',
+        restructure: 'Restructuring before departure',
+        none: 'None of these', unsure: 'Not sure yet'
+      }
     },
 
     de_retained: {
@@ -275,7 +255,6 @@ WZ.i18n.register('en', {
     title: 'Thank you. Your Wegzug Check has been submitted.',
     body: 'We will review the information provided and identify the areas that may require closer professional assessment.',
     book: 'Book a Consultation',
-    home: 'Back to Black Pearl',
-    preview: 'Preview mode: no submission endpoint is configured, so nothing was sent.'
+    home: 'Back to Black Pearl'
   }
 });
