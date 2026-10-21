@@ -15,7 +15,6 @@
   var rules = {
     taxResidenceOther: function (a) { return a.tax_residence === 'OTHER'; },
     germanCitizen: function (a) { return a.de_citizen === 'yes'; },
-    germanResidentNonCitizen: function (a) { return a.tax_residence === 'DE' && a.de_citizen === 'no'; },
     destinationOther: function (a) { return a.destination === 'OTHER'; },
 
     ownsShares: function (a) { return a.owns_shares === 'yes'; },

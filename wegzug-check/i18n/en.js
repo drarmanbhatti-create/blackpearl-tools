@@ -103,12 +103,8 @@ WZ.i18n.register('en', {
       options: { yes: 'Yes, including dual citizenship', no: 'No' }
     },
     de_unlimited_5of10: {
-      label: 'During the last 10 years before ending German unlimited tax liability, were you subject to unlimited income tax liability in Germany for a total of at least 5 years?',
+      label: 'In the 10 years before your actual or planned end of unlimited German tax liability, were you subject to unlimited income tax liability in Germany as a German citizen for a total of at least 5 years?',
       options: { yes: 'Yes', no: 'No', unsure: 'Not sure' }
-    },
-    de_residence_years: {
-      label: 'How long have you lived or been tax resident in Germany?',
-      options: { lt5: 'Less than 5 years', '5to10': '5 to 10 years', gt10: 'More than 10 years', unsure: 'Not sure' }
     },
     de_ties: {
       label: 'Which of the following apply to you in Germany, now or after the move?',
@@ -120,8 +116,7 @@ WZ.i18n.register('en', {
         business: 'Company or business interests',
         employment: 'Employment or management income',
         other_income: 'Dividends or other German-source income',
-        presence: 'Regular or significant time spent in Germany',
-        return: 'A possible return to Germany',
+        presence: 'Regular or significant time spent in Germany after the move',
         none: 'None of these',
         unsure: 'Not sure'
       }
@@ -177,6 +172,10 @@ WZ.i18n.register('en', {
         lt500k: 'Under €500,000', '500k_2m': '€500,000–€2 million', '2m_10m': '€2–10 million',
         gt10m: 'Over €10 million', unsure: 'Not sure', undisclosed: 'Prefer not to say'
       }
+    },
+    de_unlimited_7of12: {
+      label: 'During the 12 years before your actual or planned change of German tax residence, were you subject to unlimited income tax liability in Germany for a total of at least 7 years?',
+      options: { yes: 'Yes', no: 'No', unsure: 'Not sure' }
     },
     restructuring_plans: {
       label: 'Are any of the following planned or being considered?',

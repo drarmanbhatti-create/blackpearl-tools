@@ -40,18 +40,16 @@
       },
 
       /* B. Ties to Germany — asked of everyone, since German citizens may already live abroad.
-         Historic residence: the 5-of-10-years screen for German citizens; years in Germany
-         only for current German tax residents who are not German citizens. */
+         German citizens get the citizenship-specific 5-of-10-years screening question.
+         The separate 7-of-12-years screening question sits in the shareholder branch. */
       {
         id: 'ties', section: 'ties',
         fields: [
           { id: 'de_citizen', type: 'choice', required: true, layout: 'row', options: ['yes', 'no'] },
           { id: 'de_unlimited_5of10', type: 'choice', required: true, when: 'germanCitizen', layout: 'row',
             options: YES_NO_UNSURE },
-          { id: 'de_residence_years', type: 'choice', required: true, when: 'germanResidentNonCitizen', layout: 'grid',
-            options: ['lt5', '5to10', 'gt10', 'unsure'] },
           { id: 'de_ties', type: 'multi', required: true, layout: 'grid',
-            options: ['home', 'real_estate', 'personal', 'business', 'employment', 'other_income', 'presence', 'return', 'none', 'unsure'],
+            options: ['home', 'real_estate', 'personal', 'business', 'employment', 'other_income', 'presence', 'none', 'unsure'],
             exclusive: ['none', 'unsure'] }
         ]
       },
@@ -83,7 +81,9 @@
           { id: 'stake_band', type: 'choice', required: true, layout: 'grid',
             options: ['lt1', '1to10', '10to25', '25to50', 'gt50', 'unsure'] },
           { id: 'company_value', type: 'choice', required: true, layout: 'grid',
-            options: ['lt500k', '500k_2m', '2m_10m', 'gt10m', 'unsure', 'undisclosed'] }
+            options: ['lt500k', '500k_2m', '2m_10m', 'gt10m', 'unsure', 'undisclosed'] },
+          // Shareholder screening, independent of citizenship and of de_unlimited_5of10.
+          { id: 'de_unlimited_7of12', type: 'choice', required: true, layout: 'row', options: YES_NO_UNSURE }
         ]
       },
 
