@@ -16,19 +16,16 @@
   var YES_NO_UNSURE = ['yes', 'no', 'unsure'];
 
   WZ.flow = {
-    sections: ['situation', 'ties', 'business', 'company', 'assets', 'plans', 'contact'],
+    sections: ['situation', 'ties', 'business', 'company', 'plans', 'contact'],
 
     steps: [
       /* A. Current situation */
       {
         id: 'residence', section: 'situation',
         fields: [
-          { id: 'current_country', type: 'select', required: true,
+          { id: 'tax_residence', type: 'select', required: true,
             options: ['DE', 'AT', 'CH', 'NL', 'LU', 'BE', 'FR', 'IT', 'ES', 'UK', 'EU_OTHER', 'UAE', 'OTHER'] },
-          { id: 'current_country_other', type: 'text', required: true, when: 'currentCountryOther', maxLength: 80 },
-          { id: 'de_tax_resident', type: 'choice', required: true, layout: 'row', options: YES_NO_UNSURE },
-          { id: 'de_residence_years', type: 'choice', required: true, when: 'germanLink', layout: 'grid',
-            options: ['lt5', '5to10', 'gt10', 'unsure'] }
+          { id: 'tax_residence_other', type: 'text', required: true, when: 'taxResidenceOther', maxLength: 80 }
         ]
       },
       {
@@ -42,19 +39,20 @@
         ]
       },
 
-      /* B. Personal and family ties to Germany — only with a German connection */
+      /* B. Ties to Germany — asked of everyone, since German citizens may already live abroad.
+         Historic residence: the 5-of-10-years screen for German citizens; years in Germany
+         only for current German tax residents who are not German citizens. */
       {
-        id: 'ties_home', section: 'ties', when: 'germanLink',
+        id: 'ties', section: 'ties',
         fields: [
-          { id: 'de_remaining', type: 'multi', required: true,
-            options: ['home', 'partner', 'children', 'none', 'undecided'], exclusive: ['none', 'undecided'] }
-        ]
-      },
-      {
-        id: 'ties_presence', section: 'ties', when: 'germanLink',
-        fields: [
-          { id: 'de_time_after', type: 'choice', required: true, options: ['regular', 'occasional', 'rare', 'unsure'] },
-          { id: 'de_return', type: 'choice', required: true, layout: 'grid', options: ['yes', 'possibly', 'no', 'unsure'] }
+          { id: 'de_citizen', type: 'choice', required: true, layout: 'row', options: ['yes', 'no'] },
+          { id: 'de_unlimited_5of10', type: 'choice', required: true, when: 'germanCitizen', layout: 'row',
+            options: YES_NO_UNSURE },
+          { id: 'de_residence_years', type: 'choice', required: true, when: 'germanResidentNonCitizen', layout: 'grid',
+            options: ['lt5', '5to10', 'gt10', 'unsure'] },
+          { id: 'de_ties', type: 'multi', required: true, layout: 'grid',
+            options: ['home', 'real_estate', 'personal', 'business', 'employment', 'other_income', 'presence', 'return', 'none', 'unsure'],
+            exclusive: ['none', 'unsure'] }
         ]
       },
 
@@ -95,16 +93,6 @@
         fields: [
           { id: 'restructuring_plans', type: 'multi', required: true,
             options: ['company_move', 'assets_move', 'restructure', 'none', 'unsure'], exclusive: ['none', 'unsure'] }
-        ]
-      },
-
-      /* E. German assets and income */
-      {
-        id: 'german_income', section: 'assets',
-        fields: [
-          { id: 'de_retained', type: 'multi', required: true, layout: 'grid',
-            options: ['real_estate', 'rental', 'employment', 'director_pay', 'business', 'other', 'none', 'unsure'],
-            exclusive: ['none', 'unsure'] }
         ]
       },
 

@@ -46,19 +46,17 @@ WZ.i18n.register('en', {
     ties: 'Ties to Germany',
     business: 'Business interests',
     company: 'Company ownership',
-    assets: 'German assets and income',
     plans: 'Plans and priorities',
     contact: 'Contact details'
   },
 
   steps: {
-    residence: { title: 'Where you live today' },
+    residence: { title: 'Your tax residence' },
     move: { title: 'Your planned move' },
-    ties_home: {
-      title: 'Home and family',
-      intro: 'This records the practical situation after your move. It is not an assessment.'
+    ties: {
+      title: 'Ties to Germany',
+      intro: 'This records facts only. It is not an assessment.'
     },
-    ties_presence: { title: 'Time in Germany after the move' },
     business: { title: 'Business interests' },
     company_structure: { title: 'The company', intro: 'If you hold several companies, answer for the most significant one. Details can be discussed later.' },
     company_stake: { title: 'Your shareholding' },
@@ -66,33 +64,24 @@ WZ.i18n.register('en', {
       title: 'Plans for the company or business',
       intro: 'This covers your company and any self-employed, partnership or other business activity.'
     },
-    german_income: { title: 'Assets and income in Germany' },
     uae_plans: { title: 'Relocation plans' },
     review: { title: 'Areas for review' },
     contact: {
       title: 'How we can reach you',
-      intro: 'Your answers are reviewed confidentially. We will contact you using the method you prefer.'
+      intro: 'Your answers are reviewed confidentially. We will contact you using the details provided below.'
     }
   },
 
   fields: {
-    current_country: {
-      label: 'Current country of residence',
+    tax_residence: {
+      label: 'Where are you currently tax resident?',
       options: {
         DE: 'Germany', AT: 'Austria', CH: 'Switzerland', NL: 'Netherlands', LU: 'Luxembourg',
         BE: 'Belgium', FR: 'France', IT: 'Italy', ES: 'Spain', UK: 'United Kingdom',
         EU_OTHER: 'Another EU / EEA country', UAE: 'United Arab Emirates', OTHER: 'Other country'
       }
     },
-    current_country_other: { label: 'Please name the country' },
-    de_tax_resident: {
-      label: 'Are you currently tax resident in Germany?',
-      options: { yes: 'Yes', no: 'No', unsure: 'Not sure' }
-    },
-    de_residence_years: {
-      label: 'How long have you lived or been tax resident in Germany?',
-      options: { lt5: 'Less than 5 years', '5to10': '5 to 10 years', gt10: 'More than 10 years', unsure: 'Not sure' }
-    },
+    tax_residence_other: { label: 'Please name the country' },
     destination: {
       label: 'Planned destination',
       options: {
@@ -109,24 +98,33 @@ WZ.i18n.register('en', {
       }
     },
 
-    de_remaining: {
-      label: 'After the move, will any of the following remain in Germany?',
-      hint: 'Select all that apply. A home means owned or rented, including one used by family members.',
-      options: {
-        home: 'A home or apartment available to you', partner: 'Spouse / partner', children: 'Children',
-        none: 'None of these', undecided: 'Not decided yet'
-      }
+    de_citizen: {
+      label: 'Are you a German citizen?',
+      options: { yes: 'Yes, including dual citizenship', no: 'No' }
     },
-    de_time_after: {
-      label: 'Do you expect to spend significant time in Germany after the move?',
-      options: {
-        regular: 'Yes, regularly', occasional: 'Occasionally, for short visits',
-        rare: 'Rarely or not at all', unsure: 'Not sure yet'
-      }
+    de_unlimited_5of10: {
+      label: 'During the last 10 years before ending German unlimited tax liability, were you subject to unlimited income tax liability in Germany for a total of at least 5 years?',
+      options: { yes: 'Yes', no: 'No', unsure: 'Not sure' }
     },
-    de_return: {
-      label: 'Do you currently expect to return to Germany?',
-      options: { yes: 'Yes', possibly: 'Possibly', no: 'No', unsure: 'Not sure yet' }
+    de_residence_years: {
+      label: 'How long have you lived or been tax resident in Germany?',
+      options: { lt5: 'Less than 5 years', '5to10': '5 to 10 years', gt10: 'More than 10 years', unsure: 'Not sure' }
+    },
+    de_ties: {
+      label: 'Which of the following apply to you in Germany, now or after the move?',
+      hint: 'Select all that apply.',
+      options: {
+        home: 'A home available for your own use',
+        real_estate: 'German real estate',
+        personal: 'Spouse / partner, children or other close personal ties',
+        business: 'Company or business interests',
+        employment: 'Employment or management income',
+        other_income: 'Dividends or other German-source income',
+        presence: 'Regular or significant time spent in Germany',
+        return: 'A possible return to Germany',
+        none: 'None of these',
+        unsure: 'Not sure'
+      }
     },
 
     owns_shares: {
@@ -187,15 +185,6 @@ WZ.i18n.register('en', {
         assets_move: 'Moving business assets, functions or activities abroad',
         restructure: 'Restructuring before departure',
         none: 'None of these', unsure: 'Not sure yet'
-      }
-    },
-
-    de_retained: {
-      label: 'After the move, do you expect to retain any of the following in Germany?',
-      options: {
-        real_estate: 'Real estate', rental: 'Rental income', employment: 'Employment income',
-        director_pay: 'Director or managing director remuneration', business: 'Business income',
-        other: 'Other material German-source income', none: 'None of these', unsure: 'Not sure yet'
       }
     },
 

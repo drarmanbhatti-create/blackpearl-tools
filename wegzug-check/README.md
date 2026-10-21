@@ -94,7 +94,7 @@ function doPost(e) {
   "source": { "page": "https://…/wegzug-check/", "referrer": "…", "embedded": true },
   "contact": { "name": "…", "email": "…", "phone": "…", "preferredLanguage": "de" },
   "consent": { "privacyPolicy": true, "privacyPolicyUrl": "…", "consentedAt": "…" },
-  "answers": { "current_country": "DE", "de_tax_resident": "yes", "owns_shares": "yes",
+  "answers": { "tax_residence": "DE", "de_citizen": "yes", "owns_shares": "yes",
                "stake_band": "1to10", "review_topics": ["departure", "exit_tax"], "…": "…" },
   "answersReadable": [ { "section": "Current situation",
                          "question": "Current country of residence", "answer": "Germany" } ]
