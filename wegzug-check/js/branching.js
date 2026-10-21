@@ -26,9 +26,7 @@
     businessActivity: function (a) {
       return has(a.occupation, ['self_employed', 'partner', 'founder', 'business_assets']);
     },
-    companyOrBusiness: function (a) { return rules.ownsShares(a) || rules.businessActivity(a); },
-
-    phoneContact: function (a) { return a.contact_method === 'phone' || a.contact_method === 'whatsapp'; }
+    companyOrBusiness: function (a) { return rules.ownsShares(a) || rules.businessActivity(a); }
   };
 
   WZ.rules = rules;

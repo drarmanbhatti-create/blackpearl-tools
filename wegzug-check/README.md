@@ -72,8 +72,8 @@ function doPost(e) {
   var d = JSON.parse(e.postData.contents);
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
   sheet.appendRow([
-    d.submittedAt, d.submissionId, d.contact.firstName, d.contact.lastName, d.contact.email,
-    d.contact.phone || '', d.contact.preferredLanguage, d.contact.preferredContactMethod,
+    d.submittedAt, d.submissionId, d.contact.name, d.contact.email,
+    d.contact.phone || '', d.contact.preferredLanguage,
     (d.answers.review_topics || []).join(', '),
     d.answersReadable.map(function (r) { return r.question + ': ' + r.answer; }).join('\n'),
     JSON.stringify(d)
@@ -92,8 +92,7 @@ function doPost(e) {
   "submittedAt": "2026-10-04T21:18:54.883Z",
   "locale": "en",
   "source": { "page": "https://…/wegzug-check/", "referrer": "…", "embedded": true },
-  "contact": { "firstName": "…", "lastName": "…", "email": "…", "phone": "…",
-               "preferredLanguage": "de", "preferredContactMethod": "whatsapp" },
+  "contact": { "name": "…", "email": "…", "phone": "…", "preferredLanguage": "de" },
   "consent": { "privacyPolicy": true, "privacyPolicyUrl": "…", "consentedAt": "…" },
   "answers": { "current_country": "DE", "de_tax_resident": "yes", "owns_shares": "yes",
                "stake_band": "1to10", "review_topics": ["departure", "exit_tax"], "…": "…" },

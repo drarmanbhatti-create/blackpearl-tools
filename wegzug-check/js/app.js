@@ -468,6 +468,7 @@
       h('p', { class: 'wz-eyebrow', text: t('success.eyebrow') }),
       h('h2', { id: 'wz-success-title', class: 'wz-display wz-display-sm', tabindex: '-1', 'data-focus': true, text: t('success.title') }),
       h('p', { class: 'wz-lead', text: t('success.body') }),
+      h('p', { class: 'wz-note', text: t('success.note') }),
       h('div', { class: 'wz-actions wz-actions-success' }, [
         cta('book-consultation', cfg.links.consultationUrl, t('success.book'), 'wz-btn-primary'),
         cta('back-to-site', cfg.links.homeUrl, t('success.home'), 'wz-btn-secondary')

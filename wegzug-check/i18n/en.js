@@ -176,8 +176,8 @@ WZ.i18n.register('en', {
       label: 'Approximate value of your shareholding',
       hint: 'A broad estimate is sufficient. No valuation is required.',
       options: {
-        lt500k: 'Under €500,000', '500k_2m': '€500,000 – €2 million', '2m_10m': '€2 – 10 million',
-        '10m_50m': '€10 – 50 million', gt50m: 'Over €50 million', unsure: 'Not sure', undisclosed: 'Prefer not to say'
+        lt500k: 'Under €500,000', '500k_2m': '€500,000–€2 million', '2m_10m': '€2–10 million',
+        gt10m: 'Over €10 million', unsure: 'Not sure', undisclosed: 'Prefer not to say'
       }
     },
     restructuring_plans: {
@@ -216,21 +216,15 @@ WZ.i18n.register('en', {
       }
     },
 
-    first_name: { label: 'First name' },
-    last_name: { label: 'Last name' },
+    name: { label: 'Name' },
     email: { label: 'Email' },
     phone: {
       label: 'Phone / WhatsApp',
-      hint: 'Including country code, for example +49 or +971.',
-      requiredHint: 'Required for contact by phone or WhatsApp.'
+      hint: 'Including country code, for example +49 or +971.'
     },
     preferred_language: {
       label: 'Preferred language',
       options: { en: 'English', de: 'German', ru: 'Russian' }
-    },
-    contact_method: {
-      label: 'Preferred contact method',
-      options: { email: 'Email', phone: 'Phone', whatsapp: 'WhatsApp' }
     },
     privacy_consent: {
       label: 'I agree that BLACK PEARL may process the information provided in order to review my enquiry and contact me, as described in the {link}.',
@@ -255,6 +249,7 @@ WZ.i18n.register('en', {
     title: 'Thank you. Your Wegzug Check has been submitted.',
     body: 'We will review the information provided and identify the areas that may require closer professional assessment.',
     book: 'Book a Consultation',
+    note: 'We will review your enquiry and contact you. If you would prefer to schedule a consultation now, you can do so below.',
     home: 'Back to Black Pearl'
   }
 });

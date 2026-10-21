@@ -8,8 +8,7 @@
   var WZ = (window.WZ = window.WZ || {});
 
   var CONTACT_KEYS = {
-    first_name: 'firstName', last_name: 'lastName', email: 'email', phone: 'phone',
-    preferred_language: 'preferredLanguage', contact_method: 'preferredContactMethod'
+    name: 'name', email: 'email', phone: 'phone', preferred_language: 'preferredLanguage'
   };
 
   function uuid() {

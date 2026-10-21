@@ -85,7 +85,7 @@
           { id: 'stake_band', type: 'choice', required: true, layout: 'grid',
             options: ['lt1', '1to10', '10to25', '25to50', 'gt50', 'unsure'] },
           { id: 'company_value', type: 'choice', required: true, layout: 'grid',
-            options: ['lt500k', '500k_2m', '2m_10m', '10m_50m', 'gt50m', 'unsure', 'undisclosed'] }
+            options: ['lt500k', '500k_2m', '2m_10m', 'gt10m', 'unsure', 'undisclosed'] }
         ]
       },
 
@@ -132,12 +132,10 @@
       {
         id: 'contact', section: 'contact', isContact: true,
         fields: [
-          { id: 'first_name', type: 'text', required: true, autocomplete: 'given-name', maxLength: 80, half: true },
-          { id: 'last_name', type: 'text', required: true, autocomplete: 'family-name', maxLength: 80, half: true },
+          { id: 'name', type: 'text', required: true, autocomplete: 'name', maxLength: 120 },
           { id: 'email', type: 'email', required: true, autocomplete: 'email', maxLength: 160 },
-          { id: 'phone', type: 'tel', required: false, requiredWhen: 'phoneContact', autocomplete: 'tel', maxLength: 40 },
+          { id: 'phone', type: 'tel', required: false, autocomplete: 'tel', maxLength: 40 },
           { id: 'preferred_language', type: 'choice', required: true, layout: 'row', options: ['en', 'de', 'ru'] },
-          { id: 'contact_method', type: 'choice', required: true, layout: 'row', options: ['email', 'phone', 'whatsapp'] },
           { id: 'privacy_consent', type: 'consent', required: true }
         ]
       }
