@@ -1,0 +1,49 @@
+<!-- BLACK PEARL — Wegzug Check embed for Framer.
+     Paste into an Embed / HTML element on /wegzug, full width.
+     Replace the placeholder text "The structured qualification form will appear here".
+
+     Implements the bridge documented in wegzug-check/README.md:
+       bp-tool-height     -> resize the iframe to the module's content height
+       bp-tool-scroll-top -> bring the top of the module into view after each step
+       bp-tool-submitted / bp-tool-cta -> available for analytics if needed
+-->
+<div id="wegzug-check-wrap" style="width:100%">
+  <iframe
+    id="wegzug-check-frame"
+    src="https://drarmanbhatti-create.github.io/blackpearl-tools/wegzug-check/"
+    title="BLACK PEARL Wegzug Check"
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
+    style="width:100%;border:0;display:block;height:900px;transition:height .18s ease"
+    scrolling="no"></iframe>
+</div>
+
+<script>
+(function () {
+  var ORIGIN = 'https://drarmanbhatti-create.github.io';
+  var frame = document.getElementById('wegzug-check-frame');
+  var wrap  = document.getElementById('wegzug-check-wrap');
+  if (!frame) return;
+
+  window.addEventListener('message', function (e) {
+    // Only trust the deployed module's own origin.
+    if (e.origin !== ORIGIN) return;
+    var d = e.data || {};
+    if (d.tool !== 'wegzug-check') return;
+
+    if (d.type === 'bp-tool-height' && typeof d.height === 'number' && d.height > 0) {
+      frame.style.height = Math.ceil(d.height) + 'px';
+    }
+
+    if (d.type === 'bp-tool-scroll-top') {
+      var top = wrap.getBoundingClientRect().top + window.pageYOffset - 80; // clear the sticky navbar
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  });
+
+  // Ask for the height once the frame is up, in case the first message was missed.
+  frame.addEventListener('load', function () {
+    try { frame.contentWindow.postMessage({ type: 'bp-tool-height-request' }, ORIGIN); } catch (err) {}
+  });
+})();
+</script>

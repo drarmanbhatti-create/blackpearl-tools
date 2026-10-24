@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wegzug Check — BLACK PEARL</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wz" id="wz">
+  <header class="wz-head">
+    <span class="wz-brand" data-i18n="meta.brand">BLACK PEARL</span>
+    <span class="wz-head-rule" aria-hidden="true"></span>
+    <span class="wz-module" data-i18n="meta.module">Wegzug Check</span>
+  </header>
+
+  <div class="wz-progress" id="wz-progress" hidden>
+    <div class="wz-progress-meta">
+      <span class="wz-progress-count"></span>
+      <span class="wz-progress-section"></span>
+    </div>
+    <div class="wz-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+      <span class="wz-progress-fill"></span>
+    </div>
+  </div>
+
+  <div class="wz-stage" id="wz-stage"></div>
+
+  <footer class="wz-foot">
+    <p data-i18n="disclaimer.short">This check does not constitute tax or legal advice.</p>
+  </footer>
+
+  <noscript><p class="wz-lead">The Wegzug Check requires JavaScript to be enabled.</p></noscript>
+</main>
+
+<!-- Load order: configuration → text → structure → rules → submission → embedding → UI -->
+<script src="config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="i18n/en.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/branching.js"></script>
+<script src="js/submit.js"></script>
+<script src="js/embed.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
