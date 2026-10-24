@@ -17,11 +17,11 @@
       // Empty endpoint = the form fails closed: the visitor sees the retry message and
       // never a success screen, so a submission is never silently lost. Set this to the
       // webhook / Apps Script / backend URL that receives the JSON.
-      endpoint: '',
+      endpoint: 'https://script.google.com/macros/s/AKfycbwPvIub-IEpsBhODRHAt9Aey_9nt7cMRzFSbEielPyw_IsaOQZmjTEcNk3OTkQtrFET/exec',
       // 'json' → Content-Type: application/json (own backend, most lead APIs)
       // 'text' → Content-Type: text/plain, body is still JSON. Use this for
       //          Google Apps Script web apps (avoids the CORS preflight they reject).
-      format: 'json',
+      format: 'text',
       timeoutMs: 15000,
       // Local development only. true = with no endpoint the payload is logged to the
       // console and the success screen is shown. MUST stay false on a published site:
